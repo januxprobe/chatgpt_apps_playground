@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Echo Widget</title>
+    <title>{{APP_NAME}} Widget</title>
     <style>
       * {
         margin: 0;
@@ -20,28 +20,29 @@
         line-height: 1.6;
       }
 
-      .echo-container {
+      .widget-container {
         max-width: 600px;
         margin: 0 auto;
       }
 
-      .echo-header {
+      .widget-header {
         margin-bottom: 20px;
       }
 
-      .echo-header h1 {
+      .widget-header h1 {
         font-size: 24px;
         font-weight: 600;
         color: #1a1a1a;
         margin-bottom: 8px;
       }
 
-      .echo-header p {
+      .widget-header p {
         font-size: 14px;
         color: #666;
       }
 
-      .echo-output {
+      .widget-display {
+        /* TODO: Customize your gradient colors */
         background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
         border-radius: 12px;
         padding: 24px;
@@ -51,33 +52,19 @@
         overflow: hidden;
       }
 
-      .echo-output::before {
-        content: '"';
-        position: absolute;
-        top: -20px;
-        left: 10px;
-        font-size: 120px;
-        color: rgba(255, 255, 255, 0.1);
-        font-family: Georgia, serif;
-      }
-
-      .echo-text {
-        font-size: 20px;
+      .widget-content {
+        font-size: 18px;
         color: #ffffff;
-        margin-bottom: 16px;
         position: relative;
         z-index: 1;
-        font-weight: 500;
-        line-height: 1.5;
       }
 
-      .echo-metadata {
+      .widget-metadata {
         display: flex;
         gap: 16px;
+        margin-top: 16px;
         font-size: 13px;
         color: rgba(255, 255, 255, 0.9);
-        position: relative;
-        z-index: 1;
         flex-wrap: wrap;
       }
 
@@ -89,14 +76,6 @@
         padding: 6px 12px;
         border-radius: 20px;
         backdrop-filter: blur(10px);
-      }
-
-      .metadata-label {
-        font-weight: 600;
-      }
-
-      .metadata-value {
-        font-weight: 400;
       }
 
       .action-section {
@@ -126,7 +105,6 @@
 
       button:active {
         transform: translateY(0);
-        box-shadow: 0 2px 4px rgba(102, 126, 234, 0.3);
       }
 
       button:disabled {
@@ -150,58 +128,38 @@
         margin-bottom: 20px;
         border: 1px solid #fcc;
       }
-
-      @media (max-width: 480px) {
-        body {
-          padding: 12px;
-        }
-
-        .echo-text {
-          font-size: 18px;
-        }
-
-        .action-section {
-          flex-direction: column;
-        }
-
-        button {
-          width: 100%;
-        }
-      }
     </style>
   </head>
   <body>
-    <div class="echo-container">
-      <div class="echo-header">
-        <h1>Echo Widget</h1>
-        <p>Displaying your echoed text with metadata</p>
+    <div class="widget-container">
+      <div class="widget-header">
+        <h1>{{APP_NAME}} Widget</h1>
+        <p>TODO: Add your app description here</p>
       </div>
 
       <div id="error-container"></div>
 
-      <div class="echo-output">
-        <div class="echo-text" id="echo-text">Loading...</div>
-        <div class="echo-metadata">
+      <div class="widget-display">
+        <div class="widget-content" id="content">
+          Loading...
+        </div>
+        <div class="widget-metadata">
           <div class="metadata-item">
-            <span class="metadata-label">Characters:</span>
-            <span class="metadata-value" id="char-count">0</span>
+            <span>Status:</span>
+            <span id="status">Ready</span>
           </div>
           <div class="metadata-item">
-            <span class="metadata-label">Words:</span>
-            <span class="metadata-value" id="word-count">0</span>
-          </div>
-          <div class="metadata-item">
-            <span class="metadata-label">Timestamp:</span>
-            <span class="metadata-value" id="timestamp">-</span>
+            <span>Time:</span>
+            <span id="timestamp">-</span>
           </div>
         </div>
       </div>
 
       <div class="action-section">
-        <button id="echo-again-btn">Echo Again</button>
+        <button id="action-btn">Perform Action</button>
       </div>
     </div>
 
-    <script type="module" src="/widget/echo-widget.ts"></script>
+    <script type="module" src="/apps/{{APP_ID}}/widget/{{APP_ID}}-widget.ts"></script>
   </body>
 </html>

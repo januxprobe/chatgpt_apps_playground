@@ -1,0 +1,102 @@
+import { App } from "@modelcontextprotocol/ext-apps";
+
+// Initialize the MCP App
+const app = new App({
+  name: "{{APP_NAME}} Widget",
+  version: "1.0.0",
+});
+
+// DOM elements
+const contentEl = document.getElementById("content") as HTMLElement;
+const statusEl = document.getElementById("status") as HTMLElement;
+const timestampEl = document.getElementById("timestamp") as HTMLElement;
+const errorContainerEl = document.getElementById("error-container") as HTMLElement;
+const actionBtn = document.getElementById("action-btn") as HTMLButtonElement;
+
+/**
+ * Formats ISO timestamp to readable format
+ */
+function formatTimestamp(isoString: string): string {
+  const date = new Date(isoString);
+  return date.toLocaleTimeString();
+}
+
+/**
+ * Shows an error message
+ */
+function showError(message: string): void {
+  errorContainerEl.innerHTML = `<div class="error">❌ ${message}</div>`;
+  setTimeout(() => {
+    errorContainerEl.innerHTML = "";
+  }, 5000);
+}
+
+/**
+ * Updates the UI with tool results
+ */
+function updateUI(result: any): void {
+  try {
+    const data = result.structuredContent;
+
+    if (!data) {
+      showError("No data received from tool");
+      return;
+    }
+
+    // TODO: Update your UI elements based on the tool result
+    // Example:
+    if (data.input) {
+      contentEl.textContent = JSON.stringify(data.input, null, 2);
+    }
+
+    if (data.timestamp) {
+      timestampEl.textContent = formatTimestamp(data.timestamp);
+    }
+
+    statusEl.textContent = "Updated";
+
+    console.error("✅ Widget UI updated:", data);
+  } catch (error) {
+    console.error("❌ Error updating UI:", error);
+    showError("Failed to update UI");
+  }
+}
+
+/**
+ * Calls the server tool
+ */
+async function performAction(): Promise<void> {
+  try {
+    console.error("🔧 Calling {{TOOL_NAME}} tool...");
+
+    // TODO: Replace with your actual tool name and arguments
+    const result = await app.callServerTool({
+      name: "{{TOOL_NAME}}",
+      arguments: {
+        text: "Example input",
+        // Add your tool's parameters here
+      },
+    });
+
+    console.error("📥 Tool result:", result);
+    updateUI(result);
+  } catch (error) {
+    console.error("❌ Error calling tool:", error);
+    showError("Failed to execute tool");
+  }
+}
+
+// Set up event listeners
+actionBtn.addEventListener("click", performAction);
+
+// Handle tool results from ChatGPT
+app.ontoolresult = (result) => {
+  console.error("📥 Tool result received from ChatGPT:", result);
+  updateUI(result);
+};
+
+// Connect to MCP host
+console.error("🔌 Connecting {{APP_NAME}} Widget to MCP host...");
+app.connect();
+
+console.error("✅ {{APP_NAME}} Widget initialized");

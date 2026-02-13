@@ -4,7 +4,6 @@ import { StdioServerTransport } from "@modelcontextprotocol/sdk/server/stdio.js"
 import { StreamableHTTPServerTransport } from "@modelcontextprotocol/sdk/server/streamableHttp.js";
 import cors from "cors";
 import type { Request, Response } from "express";
-import { createServer } from "./server.js";
 
 /**
  * Starts the MCP server with HTTP transport for remote access (ChatGPT)
@@ -77,20 +76,6 @@ export async function startStdioServer(
   await createServerFn().connect(new StdioServerTransport());
 }
 
-/**
- * Main entry point
- */
-async function main() {
-  if (process.argv.includes("--stdio")) {
-    // STDIO mode for MCP Inspector
-    await startStdioServer(createServer);
-  } else {
-    // HTTP mode for ChatGPT
-    await startStreamableHTTPServer(createServer);
-  }
-}
-
-main().catch((e) => {
-  console.error("❌ Fatal error:", e);
-  process.exit(1);
-});
+// Note: This file exports generic infrastructure functions.
+// Individual apps should create their own entry point that imports
+// these functions and calls them with app-specific createServer functions.

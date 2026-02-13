@@ -9,5 +9,5 @@
     "resolveJsonModule": true,
     "esModuleInterop": true
   },
-  "include": ["widget", "server"]
+  "include": ["apps", "infrastructure"]
 }

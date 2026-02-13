@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Calculator Widget</title>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+                     "Helvetica Neue", Arial, sans-serif;
+        padding: 20px;
+        background: #ffffff;
+        color: #1a1a1a;
+        line-height: 1.6;
+      }
+
+      .calculator-container {
+        max-width: 600px;
+        margin: 0 auto;
+      }
+
+      .calculator-header {
+        margin-bottom: 20px;
+      }
+
+      .calculator-header h1 {
+        font-size: 24px;
+        font-weight: 600;
+        color: #1a1a1a;
+        margin-bottom: 8px;
+      }
+
+      .calculator-header p {
+        font-size: 14px;
+        color: #666;
+      }
+
+      .calculator-display {
+        background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);
+        border-radius: 12px;
+        padding: 32px 24px;
+        margin-bottom: 20px;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        position: relative;
+        overflow: hidden;
+      }
+
+      .calculator-display::before {
+        content: '=';
+        position: absolute;
+        top: -10px;
+        right: 20px;
+        font-size: 120px;
+        color: rgba(255, 255, 255, 0.1);
+        font-weight: bold;
+      }
+
+      .equation {
+        font-size: 28px;
+        color: #ffffff;
+        margin-bottom: 12px;
+        font-weight: 600;
+        position: relative;
+        z-index: 1;
+        text-align: center;
+        font-family: 'Courier New', monospace;
+      }
+
+      .result {
+        font-size: 42px;
+        color: #ffffff;
+        font-weight: 700;
+        text-align: center;
+        position: relative;
+        z-index: 1;
+        font-family: 'Courier New', monospace;
+      }
+
+      .result.error {
+        font-size: 24px;
+        color: #ffe6e6;
+      }
+
+      .calculator-metadata {
+        display: flex;
+        gap: 16px;
+        margin-top: 16px;
+        font-size: 13px;
+        color: rgba(255, 255, 255, 0.9);
+        position: relative;
+        z-index: 1;
+        flex-wrap: wrap;
+        justify-content: center;
+      }
+
+      .metadata-item {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        background: rgba(255, 255, 255, 0.15);
+        padding: 6px 12px;
+        border-radius: 20px;
+        backdrop-filter: blur(10px);
+      }
+
+      .metadata-label {
+        font-weight: 600;
+      }
+
+      .metadata-value {
+        font-weight: 400;
+      }
+
+      .operation-buttons {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 12px;
+        margin-bottom: 20px;
+      }
+
+      button {
+        background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);
+        color: white;
+        border: none;
+        padding: 14px 20px;
+        border-radius: 8px;
+        cursor: pointer;
+        font-size: 15px;
+        font-weight: 600;
+        transition: all 0.2s ease;
+        box-shadow: 0 2px 4px rgba(17, 153, 142, 0.3);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+      }
+
+      button:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 8px rgba(17, 153, 142, 0.4);
+        background: linear-gradient(135deg, #0d7a6e 0%, #2dd965 100%);
+      }
+
+      button:active {
+        transform: translateY(0);
+        box-shadow: 0 2px 4px rgba(17, 153, 142, 0.3);
+      }
+
+      button:disabled {
+        background: #ccc;
+        cursor: not-allowed;
+        transform: none;
+        box-shadow: none;
+      }
+
+      .operation-symbol {
+        font-size: 20px;
+        font-weight: 700;
+      }
+
+      .loading {
+        text-align: center;
+        color: #666;
+        padding: 40px;
+      }
+
+      .error-message {
+        background: #fee;
+        color: #c33;
+        padding: 16px;
+        border-radius: 8px;
+        margin-bottom: 20px;
+        border: 1px solid #fcc;
+      }
+
+      .history {
+        background: #f8f9fa;
+        border-radius: 8px;
+        padding: 16px;
+        margin-top: 20px;
+      }
+
+      .history h3 {
+        font-size: 14px;
+        font-weight: 600;
+        color: #666;
+        margin-bottom: 8px;
+      }
+
+      .history-item {
+        font-size: 13px;
+        color: #888;
+        padding: 4px 0;
+      }
+
+      @media (max-width: 480px) {
+        body {
+          padding: 12px;
+        }
+
+        .equation {
+          font-size: 22px;
+        }
+
+        .result {
+          font-size: 32px;
+        }
+
+        .operation-buttons {
+          grid-template-columns: 1fr;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="calculator-container">
+      <div class="calculator-header">
+        <h1>Calculator Widget</h1>
+        <p>Basic arithmetic operations with result display</p>
+      </div>
+
+      <div id="error-container"></div>
+
+      <div class="calculator-display">
+        <div class="equation" id="equation">Loading...</div>
+        <div class="result" id="result">0</div>
+        <div class="calculator-metadata">
+          <div class="metadata-item">
+            <span class="metadata-label">Operation:</span>
+            <span class="metadata-value" id="operation">-</span>
+          </div>
+          <div class="metadata-item">
+            <span class="metadata-label">Time:</span>
+            <span class="metadata-value" id="timestamp">-</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="operation-buttons">
+        <button id="add-btn">
+          <span class="operation-symbol">+</span>
+          <span>Add</span>
+        </button>
+        <button id="subtract-btn">
+          <span class="operation-symbol">−</span>
+          <span>Subtract</span>
+        </button>
+        <button id="multiply-btn">
+          <span class="operation-symbol">×</span>
+          <span>Multiply</span>
+        </button>
+        <button id="divide-btn">
+          <span class="operation-symbol">÷</span>
+          <span>Divide</span>
+        </button>
+      </div>
+    </div>
+
+    <script type="module" src="/apps/calculator/widget/calculator-widget.ts"></script>
+  </body>
+</html>

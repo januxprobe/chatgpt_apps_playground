@@ -13,15 +13,19 @@ import { fileURLToPath } from "node:url";
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-const DIST_DIR = path.join(__dirname, "..", "dist");
+const DIST_DIR = path.join(__dirname, "..", "..", "dist", "echo");
+
+// Export constants for multi-app integration
+export const APP_NAME = "Echo ChatGPT App";
+export const APP_VERSION = "1.0.0";
 
 /**
  * Creates and configures the MCP server with echo tool and UI resource
  */
 export function createServer(): McpServer {
   const server = new McpServer({
-    name: "Echo ChatGPT App",
-    version: "1.0.0",
+    name: APP_NAME,
+    version: APP_VERSION,
   });
 
   // Define UI resource URI (acts as cache key - change version to force refresh)
@@ -86,13 +90,11 @@ export function createServer(): McpServer {
     resourceUri,    // Must match the tool's resourceUri
     { mimeType: RESOURCE_MIME_TYPE },  // text/html;profile=mcp-app
     async () => {
-      console.error(`Serving UI resource from: ${DIST_DIR}/widget/echo-widget.html`);
+      const htmlPath = path.join(DIST_DIR, "widget", "apps", "echo", "widget", "echo-widget.html");
+      console.error(`Serving UI resource from: ${htmlPath}`);
 
       // Read the bundled HTML from dist directory
-      const html = await fs.readFile(
-        path.join(DIST_DIR, "widget", "echo-widget.html"),
-        "utf-8"
-      );
+      const html = await fs.readFile(htmlPath, "utf-8");
 
       return {
         contents: [
