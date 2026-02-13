@@ -46,17 +46,7 @@ npm install
 npm run build
 ```
 
-### Local Testing
-
-```bash
-# Start development server with hot reload
-npm start
-
-# In another terminal, test with MCP Inspector
-npm run inspector
-```
-
-### ChatGPT Integration
+### Testing with ChatGPT (Recommended)
 
 1. **Start the server:**
    ```bash
@@ -115,16 +105,48 @@ Vite bundles HTML, CSS, and JavaScript into one file for simplified deployment a
 ### Commands
 
 ```bash
-npm run build      # Build server + UI
-npm start          # Dev mode with watch
-npm run inspector  # Test with MCP Inspector
+npm run build      # Build server + UI (TypeScript + Vite)
+npm start          # Start dev server with hot reload (port 3001)
+npm run inspector  # Launch MCP Inspector (limited MCP Apps support)
 ```
+
+**Note:** For full widget testing, use ChatGPT via ngrok instead of the inspector.
 
 ### Testing Flow
 
-1. **MCP Inspector** - Test tools and UI locally
-2. **ngrok** - Expose local server via HTTPS
-3. **ChatGPT** - End-to-end testing with real model
+**Primary Method: ChatGPT via ngrok**
+1. Start the server: `npm start`
+2. Expose via ngrok: `ngrok http 3001`
+3. Configure ChatGPT connector with ngrok URL
+4. Test end-to-end with the real model
+
+**Alternative: MCP Inspector (Limited Support)**
+
+⚠️ **Note:** The MCP Inspector has limited support for MCP Apps with UI components. It can:
+- ✅ Connect to the server and list tools
+- ✅ Load the widget UI in sandbox
+- ❌ Properly execute tools and send results to widgets
+
+For full testing of the echo widget and interactive features, use ChatGPT via ngrok.
+
+## 🔧 Troubleshooting
+
+### STDIO Mode Logging
+In STDIO mode, `stdout` is reserved for JSON-RPC communication. All logging must use `console.error()` (stderr) instead of `console.log()`. This is already configured correctly in the codebase.
+
+### Browser Extensions
+Browser extensions like Grammarly can interfere with JSON-RPC validation by adding extra properties to messages. Disable extensions when testing the widget in the browser.
+
+### MCP Inspector Issues
+If you encounter "sandbox not loaded" errors or widgets showing "Loading..." indefinitely:
+- This is a known limitation of the MCP Inspector with MCP Apps
+- Use ChatGPT via ngrok for full testing instead
+
+### Port Already in Use
+If port 3001 is already in use:
+```bash
+lsof -ti:3001 | xargs kill -9
+```
 
 ## 📚 Resources
 
