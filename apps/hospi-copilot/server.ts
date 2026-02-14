@@ -19,6 +19,9 @@ const DIST_DIR = path.join(__dirname, "..", "..", "dist", "hospi-copilot");
 export const APP_NAME = "Hospitalisation & Care Journey Copilot";
 export const APP_VERSION = "1.0.0";
 
+// Supported languages
+type Language = 'en' | 'nl' | 'fr';
+
 // Belgian hospital list for dropdown
 const BELGIAN_HOSPITALS = [
   { id: "uz-leuven", name: "UZ Leuven", city: "Leuven" },
@@ -37,6 +40,37 @@ const BELGIAN_HOSPITALS = [
   { id: "jessa", name: "Jessa Ziekenhuis", city: "Hasselt" },
   { id: "az-turnhout", name: "AZ Turnhout", city: "Turnhout" },
 ];
+
+// Server messages translations
+const SERVER_MESSAGES = {
+  en: {
+    start: "Widget shows step 1: patient selection form.",
+    select_member: "Widget shows step 2: hospital selection with dropdown.",
+    select_hospital: "Widget shows step 3: admission date and reason form.",
+    admission_details: "Widget shows step 4: room type selection.",
+    room_type: "Widget shows step 5: review all details before submission.",
+    review: "Declaration submitted. Widget displays confirmation with declaration ID and insurance details.",
+    submitted: "Declaration complete. All details visible in widget above.",
+  },
+  nl: {
+    start: "Widget toont stap 1: patiëntselectie formulier.",
+    select_member: "Widget toont stap 2: ziekenhuis selectie met dropdown.",
+    select_hospital: "Widget toont stap 3: opnamedatum en reden formulier.",
+    admission_details: "Widget toont stap 4: kamertypeselectie.",
+    room_type: "Widget toont stap 5: controleer alle details voor indiening.",
+    review: "Aangifte ingediend. Widget toont bevestiging met aangiftenummer en verzekeringsgegevens.",
+    submitted: "Aangifte voltooid. Alle details zichtbaar in widget hierboven.",
+  },
+  fr: {
+    start: "Le widget affiche l'étape 1 : formulaire de sélection du patient.",
+    select_member: "Le widget affiche l'étape 2 : sélection de l'hôpital avec menu déroulant.",
+    select_hospital: "Le widget affiche l'étape 3 : formulaire de date et motif d'admission.",
+    admission_details: "Le widget affiche l'étape 4 : sélection du type de chambre.",
+    room_type: "Le widget affiche l'étape 5 : vérifiez tous les détails avant soumission.",
+    review: "Déclaration soumise. Le widget affiche la confirmation avec l'ID de déclaration et les détails d'assurance.",
+    submitted: "Déclaration terminée. Tous les détails visibles dans le widget ci-dessus.",
+  },
+};
 
 // Date utility functions
 function getDefaultAdmissionDate(): string {
@@ -142,6 +176,11 @@ const HospitalJourneyInput = z.object({
       "submitted",
     ])
     .default("start"),
+  language: z
+    .enum(["en", "nl", "fr"])
+    .optional()
+    .default("en")
+    .describe("UI language: en (English), nl (Dutch), fr (French)"),
   state: z
     .object({
       memberId: z.string().optional(),
@@ -177,7 +216,7 @@ export function createServer(): McpServer {
   });
 
   // Define UI resource URI (versioned for cache control)
-  const resourceUri = "ui://hospi-copilot/widget-v4.html";
+  const resourceUri = "ui://hospi-copilot/widget-v5.html";
 
   // Register the hospital_journey tool with state machine
   registerAppTool(
@@ -200,6 +239,11 @@ export function createServer(): McpServer {
           ])
           .default("start")
           .describe("Current step in the hospitalization journey"),
+        language: z
+          .enum(["en", "nl", "fr"])
+          .optional()
+          .default("en")
+          .describe("UI language: en (English), nl (Dutch/Nederlands), fr (French/Français). Detect from user's prompt language."),
         state: z
           .object({
             memberId: z.string().optional(),
@@ -239,6 +283,8 @@ export function createServer(): McpServer {
         HospitalJourneyInput.parse(args);
       const state = parsed.state ?? {};
       let step = parsed.step;
+      const language: Language = (parsed.language as Language) ?? 'en';
+      const messages = SERVER_MESSAGES[language];
 
       // Handle back navigation
       if (parsed.goBack) {
@@ -258,15 +304,13 @@ export function createServer(): McpServer {
       switch (step) {
         case "start": {
           nextStep = "select_member";
-          message =
-            "Widget shows step 1: patient selection form.";
+          message = messages.start;
           break;
         }
 
         case "select_member": {
           nextStep = "select_hospital";
-          message =
-            "Widget shows step 2: hospital selection with dropdown.";
+          message = messages.select_member;
           break;
         }
 
@@ -282,8 +326,7 @@ export function createServer(): McpServer {
             }
           }
           nextStep = "admission_details";
-          message =
-            "Widget shows step 3: admission date and reason form.";
+          message = messages.select_hospital;
           break;
         }
 
@@ -294,15 +337,13 @@ export function createServer(): McpServer {
           state.maxAdmissionDate = getMaxAdmissionDate();
 
           nextStep = "room_type";
-          message =
-            "Widget shows step 4: room type selection.";
+          message = messages.admission_details;
           break;
         }
 
         case "room_type": {
           nextStep = "review";
-          message =
-            "Widget shows step 5: review all details before submission.";
+          message = messages.room_type;
           break;
         }
 
@@ -315,15 +356,13 @@ export function createServer(): McpServer {
           // Generate complete insurance data
           state.insuranceData = generateInsuranceData(state);
 
-          message =
-            "Declaration submitted. Widget displays confirmation with declaration ID and insurance details.";
+          message = messages.review;
           break;
         }
 
         case "submitted": {
           nextStep = "submitted";
-          message =
-            "Declaration complete. All details visible in widget above.";
+          message = messages.submitted;
           break;
         }
       }
@@ -335,6 +374,7 @@ export function createServer(): McpServer {
         structuredContent: {
           step: nextStep,
           state,
+          language, // Pass language to widget for UI translations
           hospitalList: BELGIAN_HOSPITALS, // Pass hospital list for dropdown
         },
         // Narrative for the AI model

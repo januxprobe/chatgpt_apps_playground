@@ -7,6 +7,8 @@ const app = new App({
 });
 
 // Type definitions
+type Language = 'en' | 'nl' | 'fr';
+
 type Hospital = {
   id: string;
   name: string;
@@ -22,6 +24,7 @@ type HospState = {
     | "room_type"
     | "review"
     | "submitted";
+  language?: Language;
   state: {
     memberId?: string;
     memberName?: string;
@@ -43,6 +46,223 @@ type HospState = {
   hospitalList?: Hospital[];
 };
 
+// UI Translations
+const TRANSLATIONS = {
+  en: {
+    steps: {
+      step1: "Step 1: Who is being admitted?",
+      step2: "Step 2: Hospital Selection",
+      step3: "Step 3: Admission Details",
+      step4: "Step 4: Room Type",
+      step5: "Overview: Hospitalization (Demo)",
+    },
+    fields: {
+      patientName: "Patient Name",
+      patientNamePlaceholder: "E.g., yourself or child",
+      selectHospital: "Select Hospital",
+      selectFromNetwork: "-- Select from our network --",
+      other: "Other (specify below)",
+      hospitalName: "Hospital Name",
+      hospitalNamePlaceholder: "E.g., Custom Hospital",
+      city: "City / Municipality",
+      cityPlaceholder: "City or municipality",
+      hospitalLocation: "Hospital Location",
+      belgium: "Belgium",
+      abroad: "Abroad",
+      admissionDate: "Admission Date",
+      admissionDateHint: "Select a date between today and one year from now",
+      reason: "Reason for Admission",
+      reasonPlaceholder: "E.g., knee surgery, childbirth",
+      accident: "Is this the result of an accident?",
+      no: "No",
+      yes: "Yes",
+      roomType: "Room Type",
+      multiRoom: "Multi-person room",
+      singleRoom: "Single room",
+      dayAdmission: "Day admission",
+    },
+    buttons: {
+      next: "Next",
+      back: "← Back",
+      review: "Review",
+      submit: "Submit Declaration",
+    },
+    review: {
+      declarationId: "Declaration ID",
+      patientInfo: "Patient Information",
+      patient: "Patient",
+      memberNumber: "Member Number",
+      policyType: "Policy Type",
+      validUntil: "Valid Until",
+      admissionDetails: "Admission Details",
+      hospital: "Hospital",
+      admissionDate: "Admission Date",
+      reason: "Reason",
+      accident: "Accident",
+      roomType: "Room Type",
+      thirdPartyPayment: "Third-Party Payment",
+      thirdPartyPaymentTooltip: "Direct billing arrangement where your insurer pays the hospital directly for covered services",
+      coverage: "Coverage",
+      coveredItems: "Covered Items:",
+      estimatedCoPay: "Estimated Co-Pay:",
+      priorAuthRequired: "Prior authorization required",
+      priorAuthMessage: "for this type of admission. Please contact your insurer before the admission date.",
+      importantNotes: "Important Notes",
+      noOrUnknown: "No or unknown",
+    },
+    stepProgress: "Step {current} of {total}",
+    validationErrors: {
+      nameRequired: "Please enter the patient's name",
+      hospitalRequired: "Please select a hospital or enter a custom hospital name",
+      cityRequired: "Please enter the hospital city",
+      dateRequired: "Please select an admission date",
+      reasonRequired: "Please enter the reason for admission",
+    },
+  },
+  nl: {
+    steps: {
+      step1: "Stap 1: Wie wordt opgenomen?",
+      step2: "Stap 2: Ziekenhuis Selectie",
+      step3: "Stap 3: Opname Gegevens",
+      step4: "Stap 4: Kamertype",
+      step5: "Overzicht: Ziekenhuisopname (Demo)",
+    },
+    fields: {
+      patientName: "Naam Patiënt",
+      patientNamePlaceholder: "Bijv., uzelf of kind",
+      selectHospital: "Selecteer Ziekenhuis",
+      selectFromNetwork: "-- Selecteer uit ons netwerk --",
+      other: "Andere (specificeer hieronder)",
+      hospitalName: "Ziekenhuis Naam",
+      hospitalNamePlaceholder: "Bijv., Aangepast Ziekenhuis",
+      city: "Stad / Gemeente",
+      cityPlaceholder: "Stad of gemeente",
+      hospitalLocation: "Ziekenhuis Locatie",
+      belgium: "België",
+      abroad: "Buitenland",
+      admissionDate: "Opnamedatum",
+      admissionDateHint: "Selecteer een datum tussen vandaag en één jaar vanaf nu",
+      reason: "Reden voor Opname",
+      reasonPlaceholder: "Bijv., knieoperatie, bevalling",
+      accident: "Is dit het gevolg van een ongeval?",
+      no: "Nee",
+      yes: "Ja",
+      roomType: "Kamertype",
+      multiRoom: "Meerpersoonskamer",
+      singleRoom: "Eenpersoonskamer",
+      dayAdmission: "Dagopname",
+    },
+    buttons: {
+      next: "Volgende",
+      back: "← Terug",
+      review: "Controleren",
+      submit: "Aangifte Indienen",
+    },
+    review: {
+      declarationId: "Aangiftenummer",
+      patientInfo: "Patiënt Informatie",
+      patient: "Patiënt",
+      memberNumber: "Lidnummer",
+      policyType: "Polistype",
+      validUntil: "Geldig Tot",
+      admissionDetails: "Opname Gegevens",
+      hospital: "Ziekenhuis",
+      admissionDate: "Opnamedatum",
+      reason: "Reden",
+      accident: "Ongeval",
+      roomType: "Kamertype",
+      thirdPartyPayment: "Derdebetalersregeling",
+      thirdPartyPaymentTooltip: "Directe factureringsregeling waarbij uw verzekeraar het ziekenhuis rechtstreeks betaalt voor gedekte diensten",
+      coverage: "Dekking",
+      coveredItems: "Gedekte Zaken:",
+      estimatedCoPay: "Geschat Eigen Risico:",
+      priorAuthRequired: "Voorafgaande toestemming vereist",
+      priorAuthMessage: "voor dit type opname. Neem contact op met uw verzekeraar voor de opnamedatum.",
+      importantNotes: "Belangrijke Opmerkingen",
+      noOrUnknown: "Nee of onbekend",
+    },
+    stepProgress: "Stap {current} van {total}",
+    validationErrors: {
+      nameRequired: "Voer de naam van de patiënt in",
+      hospitalRequired: "Selecteer een ziekenhuis of voer een aangepaste ziekenhuisnaam in",
+      cityRequired: "Voer de stad van het ziekenhuis in",
+      dateRequired: "Selecteer een opnamedatum",
+      reasonRequired: "Voer de reden voor opname in",
+    },
+  },
+  fr: {
+    steps: {
+      step1: "Étape 1 : Qui est admis ?",
+      step2: "Étape 2 : Sélection de l'Hôpital",
+      step3: "Étape 3 : Détails de l'Admission",
+      step4: "Étape 4 : Type de Chambre",
+      step5: "Aperçu : Hospitalisation (Démo)",
+    },
+    fields: {
+      patientName: "Nom du Patient",
+      patientNamePlaceholder: "Par ex., vous-même ou enfant",
+      selectHospital: "Sélectionner l'Hôpital",
+      selectFromNetwork: "-- Sélectionner dans notre réseau --",
+      other: "Autre (spécifier ci-dessous)",
+      hospitalName: "Nom de l'Hôpital",
+      hospitalNamePlaceholder: "Par ex., Hôpital Personnalisé",
+      city: "Ville / Commune",
+      cityPlaceholder: "Ville ou commune",
+      hospitalLocation: "Localisation de l'Hôpital",
+      belgium: "Belgique",
+      abroad: "Étranger",
+      admissionDate: "Date d'Admission",
+      admissionDateHint: "Sélectionnez une date entre aujourd'hui et un an à partir de maintenant",
+      reason: "Motif de l'Admission",
+      reasonPlaceholder: "Par ex., chirurgie du genou, accouchement",
+      accident: "Est-ce le résultat d'un accident ?",
+      no: "Non",
+      yes: "Oui",
+      roomType: "Type de Chambre",
+      multiRoom: "Chambre multi-personnes",
+      singleRoom: "Chambre individuelle",
+      dayAdmission: "Admission de jour",
+    },
+    buttons: {
+      next: "Suivant",
+      back: "← Retour",
+      review: "Réviser",
+      submit: "Soumettre la Déclaration",
+    },
+    review: {
+      declarationId: "ID de Déclaration",
+      patientInfo: "Informations sur le Patient",
+      patient: "Patient",
+      memberNumber: "Numéro de Membre",
+      policyType: "Type de Police",
+      validUntil: "Valide Jusqu'au",
+      admissionDetails: "Détails de l'Admission",
+      hospital: "Hôpital",
+      admissionDate: "Date d'Admission",
+      reason: "Motif",
+      accident: "Accident",
+      roomType: "Type de Chambre",
+      thirdPartyPayment: "Tiers Payant",
+      thirdPartyPaymentTooltip: "Arrangement de facturation directe où votre assureur paie l'hôpital directement pour les services couverts",
+      coverage: "Couverture",
+      coveredItems: "Éléments Couverts :",
+      estimatedCoPay: "Quote-part Estimée :",
+      priorAuthRequired: "Autorisation préalable requise",
+      priorAuthMessage: "pour ce type d'admission. Veuillez contacter votre assureur avant la date d'admission.",
+      importantNotes: "Notes Importantes",
+      noOrUnknown: "Non ou inconnu",
+    },
+    stepProgress: "Étape {current} sur {total}",
+    validationErrors: {
+      nameRequired: "Veuillez entrer le nom du patient",
+      hospitalRequired: "Veuillez sélectionner un hôpital ou entrer un nom d'hôpital personnalisé",
+      cityRequired: "Veuillez entrer la ville de l'hôpital",
+      dateRequired: "Veuillez sélectionner une date d'admission",
+      reasonRequired: "Veuillez entrer le motif de l'admission",
+    },
+  },
+};
+
 // Handle tool results from server
 app.ontoolresult = (result: any) => {
   console.error("📥 Tool result received:", result);
@@ -50,11 +270,17 @@ app.ontoolresult = (result: any) => {
   renderStep(data);
 };
 
+// Helper to get translations
+function getT(language: Language = 'en') {
+  return TRANSLATIONS[language] || TRANSLATIONS.en;
+}
+
 // Helper to call the journey tool
 async function callJourney(
   update: Partial<HospState["state"]>,
   step: HospState["step"],
-  goBack: boolean = false
+  goBack: boolean = false,
+  language: Language = 'en'
 ) {
   try {
     console.error(`🔧 Calling hospital_journey: step=${step}`, update);
@@ -62,6 +288,7 @@ async function callJourney(
       name: "hospital_journey",
       arguments: {
         step,
+        language,
         state: update,
         goBack,
       },
@@ -89,14 +316,17 @@ function getStepNumber(step: HospState["step"]): { current: number; total: numbe
 }
 
 // Render progress indicator
-function renderProgressBar(step: HospState["step"]): string {
+function renderProgressBar(step: HospState["step"], language: Language = 'en'): string {
   const { current, total } = getStepNumber(step);
   if (current === 0 || step === "submitted") return "";
 
+  const t = getT(language);
   const percentage = (current / total) * 100;
+  const progressText = t.stepProgress.replace('{current}', current.toString()).replace('{total}', total.toString());
+
   return `
     <div class="hospi-progress">
-      <div class="hospi-progress-text">Step ${current} of ${total}</div>
+      <div class="hospi-progress-text">${progressText}</div>
       <div class="hospi-progress-bar">
         <div class="hospi-progress-fill" style="width: ${percentage}%"></div>
       </div>
@@ -105,27 +335,28 @@ function renderProgressBar(step: HospState["step"]): string {
 }
 
 // Validation function
-function validateStep(step: HospState["step"], state: HospState["state"]): string | null {
+function validateStep(step: HospState["step"], state: HospState["state"], language: Language = 'en'): string | null {
+  const t = getT(language);
   switch (step) {
     case "select_member":
       if (!state.memberName?.trim()) {
-        return "Please enter the patient's name";
+        return t.validationErrors.nameRequired;
       }
       break;
     case "select_hospital":
       if (!state.hospitalName?.trim()) {
-        return "Please select a hospital or enter a custom hospital name";
+        return t.validationErrors.hospitalRequired;
       }
       if (!state.hospitalCity?.trim()) {
-        return "Please enter the hospital city";
+        return t.validationErrors.cityRequired;
       }
       break;
     case "admission_details":
       if (!state.admissionDate?.trim()) {
-        return "Please select an admission date";
+        return t.validationErrors.dateRequired;
       }
       if (!state.reason?.trim()) {
-        return "Please enter the reason for admission";
+        return t.validationErrors.reasonRequired;
       }
       break;
   }
@@ -150,12 +381,13 @@ function showValidationError(message: string) {
 }
 
 // Render back button
-function renderBackButton(step: HospState["step"], state: HospState["state"]): string {
+function renderBackButton(step: HospState["step"], state: HospState["state"], language: Language = 'en'): string {
   // Show back button on steps 2-5 (select_hospital through review)
   const showBack = ["select_hospital", "admission_details", "room_type", "review"].includes(step);
   if (!showBack) return "";
 
-  return `<button id="backBtn" class="hospi-btn hospi-btn-secondary">← Back</button>`;
+  const t = getT(language);
+  return `<button id="backBtn" class="hospi-btn hospi-btn-secondary">${t.buttons.back}</button>`;
 }
 
 // Create tooltip
@@ -168,32 +400,42 @@ function createTooltip(term: string, explanation: string): string {
   `;
 }
 
+// Helper to get room type label
+function getRoomTypeLabel(roomType: string | undefined, language: Language = 'en'): string {
+  const t = getT(language);
+  if (roomType === "multi") return t.fields.multiRoom;
+  if (roomType === "single") return t.fields.singleRoom;
+  if (roomType === "day") return t.fields.dayAdmission;
+  return "-";
+}
+
 // Main render function
 function renderStep(data: HospState) {
   const container = document.getElementById("hospi-step-container");
   if (!container) return;
 
-  const { step, state } = data;
+  const { step, state, language = 'en' } = data;
+  const t = getT(language);
 
-  console.error(`🎨 Rendering step: ${step}`);
+  console.error(`🎨 Rendering step: ${step}, language: ${language}`);
 
   // Clear existing content
   container.innerHTML = "";
 
   if (step === "select_member") {
     container.innerHTML = `
-      ${renderProgressBar(step)}
+      ${renderProgressBar(step, language)}
       <div class="hospi-card">
-        <h3>Step 1: Who is being admitted?</h3>
+        <h3>${t.steps.step1}</h3>
         <div class="hospi-field">
-          <label>Patient Name</label>
-          <input id="memberName" placeholder="E.g., yourself or child" value="${
+          <label>${t.fields.patientName}</label>
+          <input id="memberName" placeholder="${t.fields.patientNamePlaceholder}" value="${
             state.memberName ?? ""
           }" />
         </div>
         <div class="hospi-actions">
-          ${renderBackButton(step, state)}
-          <button id="memberNext" class="hospi-btn hospi-btn-primary">Next</button>
+          ${renderBackButton(step, state, language)}
+          <button id="memberNext" class="hospi-btn hospi-btn-primary">${t.buttons.next}</button>
         </div>
       </div>
     `;
@@ -202,17 +444,17 @@ function renderStep(data: HospState) {
       const memberName = (document.getElementById("memberName") as HTMLInputElement).value;
       const updatedState = { ...state, memberName };
 
-      const error = validateStep("select_member", updatedState);
+      const error = validateStep("select_member", updatedState, language);
       if (error) {
         showValidationError(error);
         return;
       }
 
-      callJourney(updatedState, "select_member");
+      callJourney(updatedState, "select_member", false, language);
     });
 
     document.getElementById("backBtn")?.addEventListener("click", () => {
-      callJourney(state, "select_member", true);
+      callJourney(state, "select_member", true, language);
     });
 
     return;
@@ -230,53 +472,53 @@ function renderStep(data: HospState) {
     const showCustomFields = !state.hospitalId || state.hospitalId === "other";
 
     container.innerHTML = `
-      ${renderProgressBar(step)}
+      ${renderProgressBar(step, language)}
       <div class="hospi-card">
-        <h3>Step 2: Hospital Selection</h3>
+        <h3>${t.steps.step2}</h3>
         <div class="hospi-field">
-          <label>Select Hospital</label>
+          <label>${t.fields.selectHospital}</label>
           <select id="hospitalSelect">
-            <option value="">-- Select from our network --</option>
+            <option value="">${t.fields.selectFromNetwork}</option>
             ${hospitalOptions}
-            <option value="other" ${state.hospitalId === "other" ? "selected" : ""}>Other (specify below)</option>
+            <option value="other" ${state.hospitalId === "other" ? "selected" : ""}>${t.fields.other}</option>
           </select>
         </div>
         <div id="customHospitalFields" style="display: ${showCustomFields ? "block" : "none"}">
           <div class="hospi-field">
-            <label>Hospital Name</label>
-            <input id="hospitalName" placeholder="E.g., Custom Hospital" value="${
+            <label>${t.fields.hospitalName}</label>
+            <input id="hospitalName" placeholder="${t.fields.hospitalNamePlaceholder}" value="${
               state.hospitalName ?? ""
             }" />
           </div>
           <div class="hospi-field">
-            <label>City / Municipality</label>
-            <input id="hospitalCity" placeholder="City or municipality" value="${
+            <label>${t.fields.city}</label>
+            <input id="hospitalCity" placeholder="${t.fields.cityPlaceholder}" value="${
               state.hospitalCity ?? ""
             }" />
           </div>
         </div>
         <div class="hospi-field">
-          <label>Hospital Location</label>
+          <label>${t.fields.hospitalLocation}</label>
           <div class="hospi-radio-group">
             <label class="hospi-radio-option">
               <input type="radio" name="abroad" value="false" ${!state.abroad ? "checked" : ""} />
               <span class="hospi-radio-label">
                 <span class="hospi-radio-icon">🇧🇪</span>
-                <span class="hospi-radio-text">Belgium</span>
+                <span class="hospi-radio-text">${t.fields.belgium}</span>
               </span>
             </label>
             <label class="hospi-radio-option">
               <input type="radio" name="abroad" value="true" ${state.abroad ? "checked" : ""} />
               <span class="hospi-radio-label">
                 <span class="hospi-radio-icon">🌍</span>
-                <span class="hospi-radio-text">Abroad</span>
+                <span class="hospi-radio-text">${t.fields.abroad}</span>
               </span>
             </label>
           </div>
         </div>
         <div class="hospi-actions">
-          ${renderBackButton(step, state)}
-          <button id="hospitalNext" class="hospi-btn hospi-btn-primary">Next</button>
+          ${renderBackButton(step, state, language)}
+          <button id="hospitalNext" class="hospi-btn hospi-btn-primary">${t.buttons.next}</button>
         </div>
       </div>
     `;
@@ -344,17 +586,17 @@ function renderStep(data: HospState) {
         abroad,
       };
 
-      const error = validateStep("select_hospital", updatedState);
+      const error = validateStep("select_hospital", updatedState, language);
       if (error) {
         showValidationError(error);
         return;
       }
 
-      callJourney(updatedState, "select_hospital");
+      callJourney(updatedState, "select_hospital", false, language);
     });
 
     document.getElementById("backBtn")?.addEventListener("click", () => {
-      callJourney(state, "select_hospital", true);
+      callJourney(state, "select_hospital", true, language);
     });
 
     return;
@@ -366,11 +608,11 @@ function renderStep(data: HospState) {
     const maxDate = state.maxAdmissionDate || "";
 
     container.innerHTML = `
-      ${renderProgressBar(step)}
+      ${renderProgressBar(step, language)}
       <div class="hospi-card">
-        <h3>Step 3: Admission Details</h3>
+        <h3>${t.steps.step3}</h3>
         <div class="hospi-field">
-          <label>Admission Date</label>
+          <label>${t.fields.admissionDate}</label>
           <input
             type="date"
             id="admissionDate"
@@ -378,36 +620,36 @@ function renderStep(data: HospState) {
             min="${minDate}"
             max="${maxDate}"
           />
-          <div class="hospi-field-hint">Select a date between today and one year from now</div>
+          <div class="hospi-field-hint">${t.fields.admissionDateHint}</div>
         </div>
         <div class="hospi-field">
-          <label>Reason for Admission</label>
-          <input id="reason" placeholder="E.g., knee surgery, childbirth" value="${
+          <label>${t.fields.reason}</label>
+          <input id="reason" placeholder="${t.fields.reasonPlaceholder}" value="${
             state.reason ?? ""
           }" />
         </div>
         <div class="hospi-field">
-          <label>Is this the result of an accident?</label>
+          <label>${t.fields.accident}</label>
           <div class="hospi-radio-group">
             <label class="hospi-radio-option">
               <input type="radio" name="accident" value="false" ${!state.accident ? "checked" : ""} />
               <span class="hospi-radio-label">
                 <span class="hospi-radio-icon">✅</span>
-                <span class="hospi-radio-text">No</span>
+                <span class="hospi-radio-text">${t.fields.no}</span>
               </span>
             </label>
             <label class="hospi-radio-option">
               <input type="radio" name="accident" value="true" ${state.accident ? "checked" : ""} />
               <span class="hospi-radio-label">
                 <span class="hospi-radio-icon">⚠️</span>
-                <span class="hospi-radio-text">Yes</span>
+                <span class="hospi-radio-text">${t.fields.yes}</span>
               </span>
             </label>
           </div>
         </div>
         <div class="hospi-actions">
-          ${renderBackButton(step, state)}
-          <button id="detailsNext" class="hospi-btn hospi-btn-primary">Next</button>
+          ${renderBackButton(step, state, language)}
+          <button id="detailsNext" class="hospi-btn hospi-btn-primary">${t.buttons.next}</button>
         </div>
       </div>
     `;
@@ -424,17 +666,17 @@ function renderStep(data: HospState) {
         accident,
       };
 
-      const error = validateStep("admission_details", updatedState);
+      const error = validateStep("admission_details", updatedState, language);
       if (error) {
         showValidationError(error);
         return;
       }
 
-      callJourney(updatedState, "admission_details");
+      callJourney(updatedState, "admission_details", false, language);
     });
 
     document.getElementById("backBtn")?.addEventListener("click", () => {
-      callJourney(state, "admission_details", true);
+      callJourney(state, "admission_details", true, language);
     });
 
     return;
@@ -442,11 +684,11 @@ function renderStep(data: HospState) {
 
   if (step === "room_type") {
     container.innerHTML = `
-      ${renderProgressBar(step)}
+      ${renderProgressBar(step, language)}
       <div class="hospi-card">
-        <h3>Step 4: Room Type</h3>
+        <h3>${t.steps.step4}</h3>
         <div class="hospi-field">
-          <label>Room Type</label>
+          <label>${t.fields.roomType}</label>
           <div class="hospi-radio-group">
             <label class="hospi-radio-option">
               <input type="radio" name="roomType" value="multi" ${
@@ -454,7 +696,7 @@ function renderStep(data: HospState) {
               } />
               <span class="hospi-radio-label">
                 <span class="hospi-radio-icon">🛏️</span>
-                <span class="hospi-radio-text">Multi-person room</span>
+                <span class="hospi-radio-text">${t.fields.multiRoom}</span>
               </span>
             </label>
             <label class="hospi-radio-option">
@@ -463,7 +705,7 @@ function renderStep(data: HospState) {
               } />
               <span class="hospi-radio-label">
                 <span class="hospi-radio-icon">🚪</span>
-                <span class="hospi-radio-text">Single room</span>
+                <span class="hospi-radio-text">${t.fields.singleRoom}</span>
               </span>
             </label>
             <label class="hospi-radio-option">
@@ -472,40 +714,32 @@ function renderStep(data: HospState) {
               } />
               <span class="hospi-radio-label">
                 <span class="hospi-radio-icon">⏰</span>
-                <span class="hospi-radio-text">Day admission</span>
+                <span class="hospi-radio-text">${t.fields.dayAdmission}</span>
               </span>
             </label>
           </div>
         </div>
         <div class="hospi-actions">
-          ${renderBackButton(step, state)}
-          <button id="roomNext" class="hospi-btn hospi-btn-primary">Review</button>
+          ${renderBackButton(step, state, language)}
+          <button id="roomNext" class="hospi-btn hospi-btn-primary">${t.buttons.review}</button>
         </div>
       </div>
     `;
 
     document.getElementById("roomNext")?.addEventListener("click", () => {
       const roomType = (document.querySelector('input[name="roomType"]:checked') as HTMLInputElement)?.value || "multi";
-      callJourney({ ...state, roomType }, "room_type");
+      callJourney({ ...state, roomType }, "room_type", false, language);
     });
 
     document.getElementById("backBtn")?.addEventListener("click", () => {
-      callJourney(state, "room_type", true);
+      callJourney(state, "room_type", true, language);
     });
 
     return;
   }
 
   if (step === "review" || step === "submitted") {
-    const roomTypeLabel =
-      state.roomType === "multi"
-        ? "Multi-person room"
-        : state.roomType === "single"
-        ? "Single room"
-        : state.roomType === "day"
-        ? "Day admission"
-        : "-";
-
+    const roomTypeLabel = getRoomTypeLabel(state.roomType, language);
     const insuranceData = state.insuranceData || {};
     const thirdParty = insuranceData.thirdPartyPayment || {};
     const coverageBadgeClass = thirdParty.coveragePercentage === 100 ? "full-coverage" : "partial-coverage";
@@ -519,47 +753,47 @@ function renderStep(data: HospState) {
       .join("");
 
     container.innerHTML = `
-      ${renderProgressBar(step)}
+      ${renderProgressBar(step, language)}
       <div class="hospi-card">
-        <h3>Overview: Hospitalization (Demo)</h3>
+        <h3>${t.steps.step5}</h3>
         ${
           state.declarationId
-            ? `<div class="hospi-declaration-id">Declaration ID: ${state.declarationId}</div>`
+            ? `<div class="hospi-declaration-id">${t.review.declarationId}: ${state.declarationId}</div>`
             : ""
         }
 
         <div class="hospi-section">
-          <h4>Patient Information</h4>
+          <h4>${t.review.patientInfo}</h4>
           <ul class="hospi-summary">
-            <li><strong>Patient</strong><span>${state.memberName ?? "-"}</span></li>
+            <li><strong>${t.review.patient}</strong><span>${state.memberName ?? "-"}</span></li>
             ${
               insuranceData.memberNumber
-                ? `<li><strong>Member Number</strong><span>${insuranceData.memberNumber}</span></li>`
+                ? `<li><strong>${t.review.memberNumber}</strong><span>${insuranceData.memberNumber}</span></li>`
                 : ""
             }
             ${
               insuranceData.policyType
-                ? `<li><strong>Policy Type</strong><span>${insuranceData.policyType}</span></li>`
+                ? `<li><strong>${t.review.policyType}</strong><span>${insuranceData.policyType}</span></li>`
                 : ""
             }
             ${
               insuranceData.validUntil
-                ? `<li><strong>Valid Until</strong><span>${insuranceData.validUntil}</span></li>`
+                ? `<li><strong>${t.review.validUntil}</strong><span>${insuranceData.validUntil}</span></li>`
                 : ""
             }
           </ul>
         </div>
 
         <div class="hospi-section">
-          <h4>Admission Details</h4>
+          <h4>${t.review.admissionDetails}</h4>
           <ul class="hospi-summary">
-            <li><strong>Hospital</strong><span>${state.hospitalName ?? "-"}${
+            <li><strong>${t.review.hospital}</strong><span>${state.hospitalName ?? "-"}${
       state.hospitalCity ? " (" + state.hospitalCity + ")" : ""
     }</span></li>
-            <li><strong>Admission Date</strong><span>${state.admissionDate ?? "-"}</span></li>
-            <li><strong>Reason</strong><span>${state.reason ?? "-"}</span></li>
-            <li><strong>Accident</strong><span>${state.accident ? "Yes" : "No or unknown"}</span></li>
-            <li><strong>Room Type</strong><span>${roomTypeLabel}</span></li>
+            <li><strong>${t.review.admissionDate}</strong><span>${state.admissionDate ?? "-"}</span></li>
+            <li><strong>${t.review.reason}</strong><span>${state.reason ?? "-"}</span></li>
+            <li><strong>${t.review.accident}</strong><span>${state.accident ? t.fields.yes : t.review.noOrUnknown}</span></li>
+            <li><strong>${t.review.roomType}</strong><span>${roomTypeLabel}</span></li>
           </ul>
         </div>
 
@@ -568,29 +802,29 @@ function renderStep(data: HospState) {
             ? `
         <div class="hospi-section">
           <h4>${createTooltip(
-            "Third-Party Payment",
-            "Direct billing arrangement where your insurer pays the hospital directly for covered services"
+            t.review.thirdPartyPayment,
+            t.review.thirdPartyPaymentTooltip
           )}</h4>
           <div class="hospi-coverage-badge ${coverageBadgeClass}">
-            ${thirdParty.coveragePercentage}% Coverage
+            ${thirdParty.coveragePercentage}% ${t.review.coverage}
           </div>
           <p class="hospi-coverage-description">${thirdParty.coverageDescription}</p>
 
           <div class="hospi-field">
-            <strong>Covered Items:</strong>
+            <strong>${t.review.coveredItems}</strong>
             <ul class="hospi-covered-items">
               ${coveredItemsList}
             </ul>
           </div>
 
           <div class="hospi-field">
-            <strong>Estimated Co-Pay:</strong>
+            <strong>${t.review.estimatedCoPay}</strong>
             <span>${thirdParty.estimatedCoPay}</span>
           </div>
 
           ${
             thirdParty.priorAuthRequired
-              ? `<p class="hospi-note">⚠️ <strong>Prior authorization required</strong> for this type of admission. Please contact your insurer before the admission date.</p>`
+              ? `<p class="hospi-note">⚠️ <strong>${t.review.priorAuthRequired}</strong> ${t.review.priorAuthMessage}</p>`
               : ""
           }
         </div>
@@ -602,7 +836,7 @@ function renderStep(data: HospState) {
           additionalNotesList
             ? `
         <div class="hospi-section">
-          <h4>Important Notes</h4>
+          <h4>${t.review.importantNotes}</h4>
           <ul class="hospi-additional-notes">
             ${additionalNotesList}
           </ul>
@@ -615,8 +849,8 @@ function renderStep(data: HospState) {
           step === "review"
             ? `
         <div class="hospi-actions">
-          ${renderBackButton(step, state)}
-          <button id="submitBtn" class="hospi-btn hospi-btn-primary">Submit Declaration</button>
+          ${renderBackButton(step, state, language)}
+          <button id="submitBtn" class="hospi-btn hospi-btn-primary">${t.buttons.submit}</button>
         </div>
         `
             : ""
@@ -626,11 +860,11 @@ function renderStep(data: HospState) {
 
     if (step === "review") {
       document.getElementById("submitBtn")?.addEventListener("click", () => {
-        callJourney(state, "review");
+        callJourney(state, "review", false, language);
       });
 
       document.getElementById("backBtn")?.addEventListener("click", () => {
-        callJourney(state, "review", true);
+        callJourney(state, "review", true, language);
       });
     }
 
