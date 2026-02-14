@@ -391,6 +391,68 @@
       .hospi-btn-secondary:active {
         transform: translateY(0);
       }
+
+      /* Radio button groups */
+      .hospi-radio-group {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+        margin-top: 8px;
+      }
+
+      .hospi-radio-option {
+        display: flex;
+        align-items: center;
+        padding: 12px 16px;
+        border: 2px solid #e2e8f0;
+        border-radius: 8px;
+        cursor: pointer;
+        transition: all 0.2s;
+        background: #ffffff;
+      }
+
+      .hospi-radio-option:hover {
+        border-color: var(--primary-color);
+        background: var(--bg-light);
+        transform: translateX(4px);
+      }
+
+      .hospi-radio-option input[type="radio"] {
+        margin: 0;
+        margin-right: 12px;
+        width: 18px;
+        height: 18px;
+        cursor: pointer;
+        accent-color: var(--primary-color);
+      }
+
+      .hospi-radio-option input[type="radio"]:checked + .hospi-radio-label {
+        color: var(--primary-color);
+        font-weight: 600;
+      }
+
+      .hospi-radio-option:has(input[type="radio"]:checked) {
+        border-color: var(--primary-color);
+        background: linear-gradient(135deg, #e0f2fe 0%, #dbeafe 100%);
+        box-shadow: 0 2px 6px rgba(0, 92, 170, 0.15);
+      }
+
+      .hospi-radio-label {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        flex: 1;
+        color: var(--text-primary);
+      }
+
+      .hospi-radio-icon {
+        font-size: 20px;
+        line-height: 1;
+      }
+
+      .hospi-radio-text {
+        font-size: 14px;
+      }
     </style>
   </head>
   <body>

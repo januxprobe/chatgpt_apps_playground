@@ -256,11 +256,23 @@ function renderStep(data: HospState) {
           </div>
         </div>
         <div class="hospi-field">
-          <label>Abroad?</label>
-          <select id="abroad">
-            <option value="false" ${state.abroad ? "" : "selected"}>No, Belgium</option>
-            <option value="true" ${state.abroad ? "selected" : ""}>Yes, outside Belgium</option>
-          </select>
+          <label>Hospital Location</label>
+          <div class="hospi-radio-group">
+            <label class="hospi-radio-option">
+              <input type="radio" name="abroad" value="false" ${!state.abroad ? "checked" : ""} />
+              <span class="hospi-radio-label">
+                <span class="hospi-radio-icon">🇧🇪</span>
+                <span class="hospi-radio-text">Belgium</span>
+              </span>
+            </label>
+            <label class="hospi-radio-option">
+              <input type="radio" name="abroad" value="true" ${state.abroad ? "checked" : ""} />
+              <span class="hospi-radio-label">
+                <span class="hospi-radio-icon">🌍</span>
+                <span class="hospi-radio-text">Abroad</span>
+              </span>
+            </label>
+          </div>
         </div>
         <div class="hospi-actions">
           ${renderBackButton(step, state)}
@@ -298,7 +310,7 @@ function renderStep(data: HospState) {
         hospitalCity = (document.getElementById("hospitalCity") as HTMLInputElement)?.value || "";
       }
 
-      const abroad = (document.getElementById("abroad") as HTMLSelectElement).value === "true";
+      const abroad = (document.querySelector('input[name="abroad"]:checked') as HTMLInputElement)?.value === "true";
 
       const updatedState = {
         ...state,
@@ -352,10 +364,22 @@ function renderStep(data: HospState) {
         </div>
         <div class="hospi-field">
           <label>Is this the result of an accident?</label>
-          <select id="accident">
-            <option value="false" ${state.accident ? "" : "selected"}>No</option>
-            <option value="true" ${state.accident ? "selected" : ""}>Yes</option>
-          </select>
+          <div class="hospi-radio-group">
+            <label class="hospi-radio-option">
+              <input type="radio" name="accident" value="false" ${!state.accident ? "checked" : ""} />
+              <span class="hospi-radio-label">
+                <span class="hospi-radio-icon">✅</span>
+                <span class="hospi-radio-text">No</span>
+              </span>
+            </label>
+            <label class="hospi-radio-option">
+              <input type="radio" name="accident" value="true" ${state.accident ? "checked" : ""} />
+              <span class="hospi-radio-label">
+                <span class="hospi-radio-icon">⚠️</span>
+                <span class="hospi-radio-text">Yes</span>
+              </span>
+            </label>
+          </div>
         </div>
         <div class="hospi-actions">
           ${renderBackButton(step, state)}
@@ -367,7 +391,7 @@ function renderStep(data: HospState) {
     document.getElementById("detailsNext")?.addEventListener("click", () => {
       const admissionDate = (document.getElementById("admissionDate") as HTMLInputElement).value;
       const reason = (document.getElementById("reason") as HTMLInputElement).value;
-      const accident = (document.getElementById("accident") as HTMLSelectElement).value === "true";
+      const accident = (document.querySelector('input[name="accident"]:checked') as HTMLInputElement)?.value === "true";
 
       const updatedState = {
         ...state,
@@ -399,17 +423,35 @@ function renderStep(data: HospState) {
         <h3>Step 4: Room Type</h3>
         <div class="hospi-field">
           <label>Room Type</label>
-          <select id="roomType">
-            <option value="multi" ${
-              state.roomType === "multi" || !state.roomType ? "selected" : ""
-            }>Multi-person room</option>
-            <option value="single" ${
-              state.roomType === "single" ? "selected" : ""
-            }>Single room</option>
-            <option value="day" ${
-              state.roomType === "day" ? "selected" : ""
-            }>Day admission</option>
-          </select>
+          <div class="hospi-radio-group">
+            <label class="hospi-radio-option">
+              <input type="radio" name="roomType" value="multi" ${
+                state.roomType === "multi" || !state.roomType ? "checked" : ""
+              } />
+              <span class="hospi-radio-label">
+                <span class="hospi-radio-icon">🛏️</span>
+                <span class="hospi-radio-text">Multi-person room</span>
+              </span>
+            </label>
+            <label class="hospi-radio-option">
+              <input type="radio" name="roomType" value="single" ${
+                state.roomType === "single" ? "checked" : ""
+              } />
+              <span class="hospi-radio-label">
+                <span class="hospi-radio-icon">🚪</span>
+                <span class="hospi-radio-text">Single room</span>
+              </span>
+            </label>
+            <label class="hospi-radio-option">
+              <input type="radio" name="roomType" value="day" ${
+                state.roomType === "day" ? "checked" : ""
+              } />
+              <span class="hospi-radio-label">
+                <span class="hospi-radio-icon">⏰</span>
+                <span class="hospi-radio-text">Day admission</span>
+              </span>
+            </label>
+          </div>
         </div>
         <div class="hospi-actions">
           ${renderBackButton(step, state)}
@@ -419,7 +461,7 @@ function renderStep(data: HospState) {
     `;
 
     document.getElementById("roomNext")?.addEventListener("click", () => {
-      const roomType = (document.getElementById("roomType") as HTMLSelectElement).value;
+      const roomType = (document.querySelector('input[name="roomType"]:checked') as HTMLInputElement)?.value || "multi";
       callJourney({ ...state, roomType }, "room_type");
     });
 
