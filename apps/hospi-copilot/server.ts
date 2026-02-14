@@ -177,7 +177,7 @@ export function createServer(): McpServer {
   });
 
   // Define UI resource URI (versioned for cache control)
-  const resourceUri = "ui://hospi-copilot/widget-v3.html";
+  const resourceUri = "ui://hospi-copilot/widget-v4.html";
 
   // Register the hospital_journey tool with state machine
   registerAppTool(
@@ -259,14 +259,14 @@ export function createServer(): McpServer {
         case "start": {
           nextStep = "select_member";
           message =
-            "I'll help you with your hospital admission. For whom is the admission (yourself or a family member)?";
+            "Widget shows step 1: patient selection form.";
           break;
         }
 
         case "select_member": {
           nextStep = "select_hospital";
           message =
-            "Great! Please provide the patient's name, then we'll select the hospital.";
+            "Widget shows step 2: hospital selection with dropdown.";
           break;
         }
 
@@ -283,7 +283,7 @@ export function createServer(): McpServer {
           }
           nextStep = "admission_details";
           message =
-            "Perfect. Now please provide the admission date and the reason (e.g., knee surgery, childbirth).";
+            "Widget shows step 3: admission date and reason form.";
           break;
         }
 
@@ -295,14 +295,14 @@ export function createServer(): McpServer {
 
           nextStep = "room_type";
           message =
-            "What type of room would you like? Multi-person room, single room, or day admission?";
+            "Widget shows step 4: room type selection.";
           break;
         }
 
         case "room_type": {
           nextStep = "review";
           message =
-            "I'll create a summary of your declaration so you can review everything before we submit.";
+            "Widget shows step 5: review all details before submission.";
           break;
         }
 
@@ -316,14 +316,14 @@ export function createServer(): McpServer {
           state.insuranceData = generateInsuranceData(state);
 
           message =
-            "Your hospitalization has been registered (demo). Use this overview and your member number to inform the hospital.";
+            "Declaration submitted. Widget displays confirmation with declaration ID and insurance details.";
           break;
         }
 
         case "submitted": {
           nextStep = "submitted";
           message =
-            "Your demo declaration is complete. You can ask additional questions or simulate extra costs.";
+            "Declaration complete. All details visible in widget above.";
           break;
         }
       }
