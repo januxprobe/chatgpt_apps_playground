@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Hospitalisation & Care Journey</title>
+    <style>
+      :root {
+        --primary-color: #005caa;
+        --secondary-color: #00a86b;
+        --bg-light: #f5f8fb;
+        --border-color: #d5e0f0;
+        --text-primary: #1a1a1a;
+        --text-secondary: #4b607a;
+      }
+
+      body {
+        margin: 0;
+        padding: 0;
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+          "Helvetica Neue", Arial, sans-serif;
+      }
+
+      .hospi-container {
+        padding: 16px;
+        background: var(--bg-light);
+        border-radius: 12px;
+        border: 1px solid var(--border-color);
+        max-width: 600px;
+        margin: 0 auto;
+      }
+
+      .hospi-header {
+        margin-bottom: 16px;
+      }
+
+      .hospi-header h2 {
+        margin: 0 0 6px 0;
+        font-size: 18px;
+        color: var(--text-primary);
+        font-weight: 600;
+      }
+
+      .hospi-subtitle {
+        margin: 0;
+        font-size: 13px;
+        color: var(--text-secondary);
+      }
+
+      .hospi-card {
+        background: #ffffff;
+        border-radius: 10px;
+        padding: 16px;
+        box-shadow: 0 2px 4px rgba(15, 23, 42, 0.08);
+        margin-bottom: 12px;
+      }
+
+      .hospi-card h3 {
+        margin: 0 0 16px 0;
+        font-size: 16px;
+        color: var(--text-primary);
+        font-weight: 600;
+      }
+
+      .hospi-field {
+        display: flex;
+        flex-direction: column;
+        margin-bottom: 14px;
+      }
+
+      .hospi-field label {
+        margin-bottom: 6px;
+        font-size: 13px;
+        font-weight: 500;
+        color: var(--text-primary);
+      }
+
+      .hospi-field input,
+      .hospi-field select,
+      .hospi-field textarea {
+        padding: 8px 12px;
+        border-radius: 6px;
+        border: 1px solid #cbd5e1;
+        font-size: 14px;
+        font-family: inherit;
+        transition: border-color 0.2s;
+      }
+
+      .hospi-field input:focus,
+      .hospi-field select:focus,
+      .hospi-field textarea:focus {
+        outline: none;
+        border-color: var(--primary-color);
+      }
+
+      .hospi-actions {
+        display: flex;
+        justify-content: flex-end;
+        margin-top: 16px;
+        gap: 10px;
+      }
+
+      .hospi-btn {
+        border-radius: 8px;
+        padding: 10px 20px;
+        font-size: 14px;
+        font-weight: 500;
+        border: none;
+        cursor: pointer;
+        transition: all 0.2s;
+      }
+
+      .hospi-btn-primary {
+        background: var(--primary-color);
+        color: #ffffff;
+      }
+
+      .hospi-btn-primary:hover {
+        background: #004a8f;
+        transform: translateY(-1px);
+        box-shadow: 0 4px 8px rgba(0, 92, 170, 0.2);
+      }
+
+      .hospi-btn-primary:active {
+        transform: translateY(0);
+      }
+
+      .hospi-summary {
+        list-style: none;
+        padding-left: 0;
+        font-size: 14px;
+      }
+
+      .hospi-summary li {
+        margin-bottom: 10px;
+        padding: 8px 12px;
+        background: var(--bg-light);
+        border-radius: 6px;
+        display: flex;
+        align-items: baseline;
+      }
+
+      .hospi-summary strong {
+        min-width: 140px;
+        color: var(--text-secondary);
+        font-weight: 600;
+        font-size: 12px;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+      }
+
+      .hospi-summary span {
+        color: var(--text-primary);
+        flex: 1;
+      }
+
+      .hospi-note {
+        font-size: 12px;
+        color: var(--text-secondary);
+        margin-top: 16px;
+        padding: 12px;
+        background: #fef3c7;
+        border-left: 3px solid #f59e0b;
+        border-radius: 4px;
+        line-height: 1.5;
+      }
+
+      .hospi-declaration-id {
+        font-size: 20px;
+        font-weight: bold;
+        color: var(--primary-color);
+        text-align: center;
+        margin: 16px 0;
+        padding: 16px;
+        background: linear-gradient(135deg, #e0f2fe 0%, #dbeafe 100%);
+        border-radius: 8px;
+        letter-spacing: 1px;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="hospi-root" class="hospi-container">
+      <header class="hospi-header">
+        <h2>🏥 Hospitalisation & Care Journey</h2>
+        <p class="hospi-subtitle">
+          Conversational admission declaration for your insurance
+        </p>
+      </header>
+      <main id="hospi-step-container"></main>
+    </div>
+    <script type="module" src="./hospi-copilot-widget.ts"></script>
+  </body>
+</html>

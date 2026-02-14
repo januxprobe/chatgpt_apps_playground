@@ -6,6 +6,7 @@ This is a multi-app learning playground demonstrating the MCP Apps architecture.
 **Currently includes:**
 - 🔊 **Echo App** - Text echo with character/word counts
 - 🧮 **Calculator App** - Arithmetic operations (add, subtract, multiply, divide)
+- 🏥 **Hospi-Copilot** - Multi-step hospitalization journey for insurance declarations
 - 📦 **App Template** - Scaffolding for creating new apps in ~5 minutes
 
 ## Multi-App Architecture
@@ -18,6 +19,7 @@ mcp-apps-playground/
 ├── apps/                    # Self-contained MCP apps
 │   ├── echo/               # Echo app
 │   ├── calculator/         # Calculator app
+│   ├── hospi-copilot/      # Hospitalization journey app
 │   └── _template/          # Template for new apps
 ├── infrastructure/         # Shared, reusable code
 │   └── server/
@@ -31,6 +33,7 @@ mcp-apps-playground/
 └── dist/                 # Build output
     ├── echo/
     ├── calculator/
+    ├── hospi-copilot/
     └── infrastructure/
 ```
 
@@ -290,6 +293,7 @@ npm install          # Install dependencies
 npm run build                    # Build all apps + infrastructure
 npm run build:echo               # Build echo app only
 npm run build:calculator         # Build calculator app only
+npm run build:hospi-copilot      # Build hospi-copilot app only
 npm run build:infrastructure     # Build infrastructure only
 ```
 
@@ -299,6 +303,7 @@ npm run build:infrastructure     # Build infrastructure only
 ```bash
 ./scripts/start-app.sh echo          # Start echo app
 ./scripts/start-app.sh calculator    # Start calculator app
+./scripts/start-app.sh hospi-copilot # Start hospi-copilot app
 ```
 This script automatically:
 - Builds the app
@@ -308,14 +313,16 @@ This script automatically:
 
 **Development mode (with hot reload):**
 ```bash
-npm run start:echo           # Echo app dev mode
-npm run start:calculator     # Calculator app dev mode
+npm run start:echo               # Echo app dev mode
+npm run start:calculator         # Calculator app dev mode
+npm run start:hospi-copilot      # Hospi-copilot app dev mode
 ```
 
 **Test with MCP Inspector:**
 ```bash
-npm run inspector:echo       # Test echo with Inspector
-npm run inspector:calculator # Test calculator with Inspector
+npm run inspector:echo           # Test echo with Inspector
+npm run inspector:calculator     # Test calculator with Inspector
+npm run inspector:hospi-copilot  # Test hospi-copilot with Inspector
 ```
 
 **Multi-app server (WIP):**
@@ -502,6 +509,14 @@ main().catch((e) => {
 **Tools:** `add`, `subtract`, `multiply`, `divide`
 **UI:** Blue/green gradient with operation history
 **Pattern:** Multiple tools, one widget, state management
+
+### Hospi-Copilot (State Machine Example)
+**Purpose:** Multi-step journey with state accumulation for insurance POC
+**Tools:** `hospital_journey` - 7-step hospitalization admission flow
+**UI:** Professional healthcare insurance theme (blue/green)
+**Pattern:** Single tool, state machine, multi-step form journey
+**Steps:** select_member → select_hospital → admission_details → room_type → review → submitted
+**Features:** Form inputs, state accumulation, demo declaration ID generation (HSP-XXXXXX)
 
 ### Template (Scaffolding Base)
 **Purpose:** Starting point for new apps

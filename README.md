@@ -9,6 +9,7 @@ This is a learning playground that demonstrates the MCP (Model Context Protocol)
 **Currently includes:**
 - 🔊 **Echo App** - Text echo with character/word counts (purple gradient UI)
 - 🧮 **Calculator App** - Arithmetic operations: add, subtract, multiply, divide (blue/green gradient UI)
+- 🏥 **Hospi-Copilot** - Multi-step hospitalization journey for insurance declarations (healthcare UI)
 - 📦 **App Template** - Scaffolding for creating new apps in ~5 minutes
 - 🌐 **Dual-Platform** - Same apps work on ChatGPT and Claude Desktop
 
@@ -153,12 +154,13 @@ This will:
 **Then:**
 1. **Completely restart Claude Desktop** (quit and reopen)
 2. Open Connectors panel (hammer icon)
-3. Verify apps appear: `echo`, `calculator`
+3. Verify apps appear: `echo`, `calculator`, `hospi-copilot`
 4. Test in a conversation
 
 **Test prompts:**
 - Echo: `"Echo back 'Hello Claude!'"`
 - Calculator: `"What is 42 times 17?"`
+- Hospi-Copilot: `"Start a hospital admission for myself"`
 
 **Requirements:**
 - Claude Desktop installed ([download here](https://claude.ai/download))
@@ -228,6 +230,37 @@ Basic arithmetic operations with interactive UI.
 
 ---
 
+### 🏥 Hospi-Copilot
+
+Multi-step hospitalization journey assistant for insurance declarations.
+
+**Tools:**
+- `hospital_journey` - Guide users through a 7-step admission process
+
+**Features:**
+- Professional healthcare insurance UI (blue/green theme)
+- 7-step journey: select member → hospital → admission details → room type → review → submit
+- State machine with data accumulation
+- Demo declaration ID generation (HSP-XXXXXX format)
+- Interactive form inputs at each step
+- Summary review before submission
+
+**Steps:**
+1. **Select Member** - Who is being admitted?
+2. **Hospital Selection** - Hospital name, city, abroad status
+3. **Admission Details** - Date, reason, accident checkbox
+4. **Room Type** - Multi-person, single, or day admission
+5. **Review** - Summary of all information
+6. **Submitted** - Declaration ID and confirmation
+
+**Start:** `./scripts/start-app.sh hospi-copilot`
+
+**Example prompts:**
+- "Start a hospital admission for myself"
+- "I need to declare a hospitalization"
+
+---
+
 ## 🛠️ Creating Your Own App
 
 ### Quick Method (5 minutes)
@@ -270,6 +303,12 @@ mcp-apps-playground/
 │   │   └── widget/
 │   │       ├── calculator-widget.html
 │   │       └── calculator-widget.ts
+│   ├── hospi-copilot/
+│   │   ├── server.ts              # Hospitalization journey MCP server
+│   │   ├── standalone.ts
+│   │   └── widget/
+│   │       ├── hospi-copilot-widget.html
+│   │       └── hospi-copilot-widget.ts
 │   └── _template/                 # Template for new apps
 │       ├── README.md
 │       ├── server.ts.template
@@ -290,7 +329,8 @@ mcp-apps-playground/
 ├── dist/                         # Build output
 │   ├── infrastructure/
 │   ├── echo/
-│   └── calculator/
+│   ├── calculator/
+│   └── hospi-copilot/
 ├── vite.app.config.ts            # Widget build config
 ├── tsconfig.json                 # Base TypeScript config
 ├── tsconfig.app.json             # App compilation
@@ -303,24 +343,27 @@ mcp-apps-playground/
 ### Build Commands
 
 ```bash
-npm run build                # Build all apps + infrastructure
-npm run build:echo           # Build echo app only
-npm run build:calculator     # Build calculator app only
-npm run build:infrastructure # Build infrastructure only
+npm run build                    # Build all apps + infrastructure
+npm run build:echo               # Build echo app only
+npm run build:calculator         # Build calculator app only
+npm run build:hospi-copilot      # Build hospi-copilot app only
+npm run build:infrastructure     # Build infrastructure only
 ```
 
 ### Development Mode (with hot reload)
 
 ```bash
-npm run start:echo           # Echo app dev mode
-npm run start:calculator     # Calculator app dev mode
+npm run start:echo               # Echo app dev mode
+npm run start:calculator         # Calculator app dev mode
+npm run start:hospi-copilot      # Hospi-copilot app dev mode
 ```
 
 ### Testing with MCP Inspector
 
 ```bash
-npm run inspector:echo       # Test echo with MCP Inspector
-npm run inspector:calculator # Test calculator with MCP Inspector
+npm run inspector:echo           # Test echo with MCP Inspector
+npm run inspector:calculator     # Test calculator with MCP Inspector
+npm run inspector:hospi-copilot  # Test hospi-copilot with MCP Inspector
 ```
 
 ⚠️ **Note:** MCP Inspector has limited support for MCP Apps with UI components. For full testing, use ChatGPT via ngrok.

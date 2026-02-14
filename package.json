@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "build": "npm run build:infrastructure && npm run build:echo && npm run build:calculator",
+    "build": "npm run build:infrastructure && npm run build:echo && npm run build:calculator && npm run build:hospi-copilot",
     "build:infrastructure": "tsc -p tsconfig.infrastructure.json",
     "build:echo": "tsc -p tsconfig.app.json && cross-env APP=echo vite build --config vite.app.config.ts",
     "build:calculator": "tsc -p tsconfig.app.json && cross-env APP=calculator vite build --config vite.app.config.ts",
@@ -13,7 +13,10 @@
     "start:calculator": "concurrently 'cross-env APP=calculator NODE_ENV=development vite build --watch --config vite.app.config.ts' 'tsx watch apps/calculator/standalone.ts'",
     "start:multi": "npm run build && tsx infrastructure/server/multi-app-entry.ts",
     "inspector:echo": "npx @modelcontextprotocol/inspector tsx apps/echo/standalone.ts -- --stdio",
-    "inspector:calculator": "npx @modelcontextprotocol/inspector tsx apps/calculator/standalone.ts -- --stdio"
+    "inspector:calculator": "npx @modelcontextprotocol/inspector tsx apps/calculator/standalone.ts -- --stdio",
+    "build:hospi-copilot": "tsc -p tsconfig.app.json && cross-env APP=hospi-copilot vite build --config vite.app.config.ts",
+    "start:hospi-copilot": "concurrently 'cross-env APP=hospi-copilot NODE_ENV=development vite build --watch --config vite.app.config.ts' 'tsx watch apps/hospi-copilot/standalone.ts'",
+    "inspector:hospi-copilot": "npx @modelcontextprotocol/inspector tsx apps/hospi-copilot/standalone.ts -- --stdio"
   },
   "repository": {
     "type": "git",
