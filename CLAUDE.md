@@ -496,9 +496,13 @@ main().catch((e) => {
 
 ## Security Configuration (CSP and Domain)
 
+**Status**: ✅ Implemented, tested, and verified in ChatGPT (February 2026)
+
 ### Overview
 
 All MCP apps **MUST** configure Content Security Policy (CSP) and domain settings for ChatGPT app submission. These settings define which external resources your widget can access and provide a unique identifier for sandboxing.
+
+**All apps in this playground are submission-ready** with proper CSP configuration tested and verified.
 
 **Important:** Claude Desktop (STDIO mode) ignores these settings - they only apply to ChatGPT's sandboxed widget environment.
 
@@ -645,6 +649,10 @@ registerAppResource(
 
 ### Testing CSP Configuration
 
+**✅ Verification Status**: All apps tested and verified (February 2026)
+
+**How to test your app:**
+
 **1. Build your app:**
 ```bash
 npm run build:<app-id>
@@ -668,9 +676,10 @@ npm run build:<app-id>
 - Add blocked domains to your CSP configuration
 
 **5. Verify submission readiness:**
-- No "Widget CSP is not set" warning
-- No "Widget domain is not set" warning
-- No CSP violations in console
+- ✅ No "Widget CSP is not set" warning
+- ✅ No "Widget domain is not set" warning
+- ✅ No CSP violations in console
+- ✅ ChatGPT correctly receives domain and CSP metadata
 
 ### Common CSP Violations and Fixes
 
@@ -713,11 +722,13 @@ _meta: metadata
 
 ### Current App Domains
 
-| App | Domain | CSP Type |
-|-----|--------|----------|
-| echo | `echo-mcp-app` | Self-contained |
-| calculator | `calculator-mcp-app` | Self-contained |
-| hospi-copilot | `hospi-copilot` | Self-contained |
+| App | Domain | CSP Type | Status |
+|-----|--------|----------|--------|
+| echo | `echo-mcp-app` | Self-contained | ✅ Verified |
+| calculator | `calculator-mcp-app` | Self-contained | ✅ Verified |
+| hospi-copilot | `hospi-copilot` | Self-contained | ✅ Verified |
+
+All apps tested in ChatGPT with no CSP/domain warnings.
 
 ## Important Conventions
 
@@ -801,14 +812,15 @@ _meta: metadata
 - ✅ No tool name conflicts
 - ✅ Both widgets render correctly
 
-### Security Testing (CSP and Domain)
-- ✅ CSP configured for all apps
+### Security Testing (CSP and Domain) - ✅ Completed & Verified (Feb 2026)
+- ✅ CSP configured for all apps (echo, calculator, hospi-copilot)
 - ✅ Domain is unique and follows naming convention
 - ✅ No CSP violations in browser console
 - ✅ Widget renders correctly with CSP enforced
-- ✅ No "Widget CSP is not set" warning in ChatGPT
-- ✅ No "Widget domain is not set" warning in ChatGPT
-- ✅ All external resources are properly allowlisted in CSP
+- ✅ No "Widget CSP is not set" warning in ChatGPT - **VERIFIED**
+- ✅ No "Widget domain is not set" warning in ChatGPT - **VERIFIED**
+- ✅ ChatGPT correctly receives domain and CSP metadata - **VERIFIED**
+- ✅ All apps are submission-ready
 
 ## Common Issues
 

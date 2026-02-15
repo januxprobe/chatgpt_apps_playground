@@ -12,6 +12,7 @@ This is a learning playground that demonstrates the MCP (Model Context Protocol)
 - 🏥 **Hospi-Copilot** - Production-ready multilingual (EN/NL/FR) hospitalization journey with dropdowns, date picker, insurance data, validation (healthcare UI)
 - 📦 **App Template** - Scaffolding for creating new apps in ~5 minutes
 - 🌐 **Dual-Platform** - Same apps work on ChatGPT and Claude Desktop
+- ✅ **ChatGPT Ready** - All apps include CSP and domain configuration for app submission
 
 ## 🎯 Purpose
 
@@ -448,6 +449,30 @@ Tool handlers return:
 ### Single HTML Bundle
 
 Vite with `vite-plugin-singlefile` bundles HTML, CSS, and JavaScript into one file for simplified deployment.
+
+### Security & Submission (CSP)
+
+All apps are **ChatGPT submission-ready** with Content Security Policy (CSP) and domain configuration:
+
+```typescript
+_meta: {
+  ui: {
+    domain: "app-unique-id",  // Unique identifier for sandboxing
+    csp: {
+      connectDomains: [],     // External API domains
+      resourceDomains: [],    // External asset domains (CDN, fonts, images)
+    }
+  }
+}
+```
+
+**Current apps status:**
+- ✅ **echo** - Domain: `echo-mcp-app`, Self-contained CSP
+- ✅ **calculator** - Domain: `calculator-mcp-app`, Self-contained CSP
+- ✅ **hospi-copilot** - Domain: `hospi-copilot`, Self-contained CSP
+- ✅ **Tested & Verified** - No CSP warnings in ChatGPT
+
+All apps use self-contained CSP (empty arrays) because assets are bundled by Vite. See `CLAUDE.md` for detailed CSP documentation.
 
 ## 🔧 Troubleshooting
 
