@@ -25,7 +25,7 @@ mcp-apps-playground/
 │   └── server/
 │       ├── main.ts        # Generic HTTP/STDIO transport
 │       ├── types.ts       # TypeScript interfaces
-│       └── multi-app.ts   # Multi-app server (WIP)
+│       └── i18n.ts        # Internationalization utilities
 ├── scripts/               # Automation
 │   ├── start-app.sh      # Start single app
 │   ├── new-app.sh        # Create new app
@@ -55,7 +55,6 @@ The infrastructure is **generic and reusable**:
 - `main.ts` - Accepts a `createServer()` callback, provides HTTP/STDIO transport
 - `types.ts` - Shared TypeScript interfaces (AppServerModule, AppConfig)
 - `i18n.ts` - Internationalization utilities and best practices for multilingual apps
-- `multi-app.ts` - Multi-app server composer (work in progress)
 
 **Key insight:** `infrastructure/server/main.ts` is completely app-agnostic. It never imports app-specific code.
 
@@ -361,7 +360,7 @@ See template documentation: `apps/_template/README.md`
 ### Infrastructure (Reusable)
 - `infrastructure/server/main.ts` - Generic HTTP/STDIO server
 - `infrastructure/server/types.ts` - Shared TypeScript interfaces
-- `infrastructure/server/multi-app.ts` - Multi-app server composer
+- `infrastructure/server/i18n.ts` - Internationalization utilities
 - `tsconfig.infrastructure.json` - Infrastructure compilation config
 
 ### Per-App Files
@@ -732,7 +731,7 @@ All apps tested in ChatGPT with no CSP/domain warnings.
 
 ## Important Conventions
 
-### Multi-App Conventions
+### App Conventions
 - **App isolation**: Each app is fully independent and can run standalone
 - **Shared infrastructure**: Never duplicate server transport logic
 - **Standard exports**: All apps export APP_NAME, APP_VERSION, createServer()
@@ -805,12 +804,6 @@ All apps tested in ChatGPT with no CSP/domain warnings.
 - ✅ Tools listed with correct schemas
 - ✅ Can invoke tools and see responses
 - ✅ Widget loads (may have limitations in Inspector)
-
-### Multi-App Testing (WIP)
-- ✅ `npm run start:multi` starts
-- ✅ All app tools available
-- ✅ No tool name conflicts
-- ✅ Both widgets render correctly
 
 ### Security Testing (CSP and Domain) - ✅ Completed & Verified (Feb 2026)
 - ✅ CSP configured for all apps (echo, calculator, hospi-copilot)

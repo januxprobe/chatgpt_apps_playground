@@ -11,7 +11,6 @@
     "build:calculator": "tsc -p tsconfig.app.json && cross-env APP=calculator vite build --config vite.app.config.ts",
     "start:echo": "concurrently 'cross-env APP=echo NODE_ENV=development vite build --watch --config vite.app.config.ts' 'tsx watch apps/echo/standalone.ts'",
     "start:calculator": "concurrently 'cross-env APP=calculator NODE_ENV=development vite build --watch --config vite.app.config.ts' 'tsx watch apps/calculator/standalone.ts'",
-    "start:multi": "npm run build && tsx infrastructure/server/multi-app-entry.ts",
     "inspector:echo": "npx @modelcontextprotocol/inspector tsx apps/echo/standalone.ts -- --stdio",
     "inspector:calculator": "npx @modelcontextprotocol/inspector tsx apps/calculator/standalone.ts -- --stdio",
     "build:hospi-copilot": "tsc -p tsconfig.app.json && cross-env APP=hospi-copilot vite build --config vite.app.config.ts",

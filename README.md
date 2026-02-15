@@ -333,13 +333,11 @@ mcp-apps-playground/
 │   └── server/
 │       ├── main.ts               # Generic HTTP/STDIO server
 │       ├── types.ts              # TypeScript interfaces
-│       ├── multi-app.ts          # Multi-app server (WIP)
-│       └── multi-app-entry.ts
+│       └── i18n.ts               # Internationalization utilities
 ├── scripts/
 │   ├── start-app.sh              # Start any app
 │   ├── new-app.sh                # Create new app
 │   ├── build-app.sh              # Build specific app
-│   ├── start-multi.sh            # Start all apps (WIP)
 │   └── stop.sh                   # Stop all services
 ├── dist/                         # Build output
 │   ├── infrastructure/
