@@ -15,6 +15,9 @@ const __dirname = path.dirname(__filename);
 
 const DIST_DIR = path.join(__dirname, "..", "..", "dist", "{{APP_ID}}");
 
+// Detect transport mode: STDIO (Claude Desktop) vs HTTP (ChatGPT)
+const isStdio = process.argv.includes("--stdio");
+
 // Export constants for multi-app integration
 export const APP_NAME = "{{APP_NAME}}";
 export const APP_VERSION = "1.0.0";
@@ -143,12 +146,12 @@ export function createServer(): McpServer {
             mimeType: RESOURCE_MIME_TYPE,
             text: html,
             // REQUIRED: CSP and domain configuration for ChatGPT submission
-            // Note: Claude Desktop (STDIO mode) ignores these settings
             _meta: {
               ui: {
-                // Unique domain identifier (not a real DNS domain, just a string)
+                // Domain is only included for remote connectors (ChatGPT via HTTP)
+                // Claude Desktop (local STDIO) doesn't support domain field
                 // ChatGPT uses this for sandboxing: {domain}.web-sandbox.oaiusercontent.com
-                domain: "{{APP_ID}}-app",
+                ...(isStdio ? {} : { domain: "{{APP_ID}}-app" }),
 
                 // Content Security Policy: controls which external resources your widget can access
                 csp: {

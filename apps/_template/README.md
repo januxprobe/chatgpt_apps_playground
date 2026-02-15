@@ -70,7 +70,10 @@ Most MCP apps don't need external resources - everything is bundled by Vite:
 ```typescript
 _meta: {
   ui: {
-    domain: "{{APP_ID}}-app",  // Your unique domain identifier
+    // Domain conditionally included based on transport mode:
+    // - ChatGPT (HTTP): domain included for sandboxing
+    // - Claude Desktop (STDIO): domain omitted (not supported)
+    ...(isStdio ? {} : { domain: "{{APP_ID}}-app" }),
     csp: {
       connectDomains: [],       // No external API calls
       resourceDomains: [],      // No external assets
@@ -79,7 +82,7 @@ _meta: {
 }
 ```
 
-**This default is already configured in the template** and works for most apps.
+**This default is already configured in the template** and works on both ChatGPT and Claude Desktop.
 
 ### When to Modify CSP
 

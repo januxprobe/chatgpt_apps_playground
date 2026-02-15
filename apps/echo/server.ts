@@ -15,6 +15,9 @@ const __dirname = path.dirname(__filename);
 
 const DIST_DIR = path.join(__dirname, "..", "..", "dist", "echo");
 
+// Detect transport mode: STDIO (Claude Desktop) vs HTTP (ChatGPT)
+const isStdio = process.argv.includes("--stdio");
+
 // Export constants for multi-app integration
 export const APP_NAME = "Echo MCP App";
 export const APP_VERSION = "1.0.0";
@@ -104,7 +107,9 @@ export function createServer(): McpServer {
             text: html,
             _meta: {
               ui: {
-                domain: "echo-mcp-app",
+                // Only include domain for remote connectors (ChatGPT)
+                // Claude Desktop (local STDIO) doesn't support domain field
+                ...(isStdio ? {} : { domain: "echo-mcp-app" }),
                 csp: {
                   connectDomains: [],
                   resourceDomains: [],

@@ -503,7 +503,11 @@ All MCP apps **MUST** configure Content Security Policy (CSP) and domain setting
 
 **All apps in this playground are submission-ready** with proper CSP configuration tested and verified.
 
-**Important:** Claude Desktop (STDIO mode) ignores these settings - they only apply to ChatGPT's sandboxed widget environment.
+**Dual-Platform Support:** Apps in this playground automatically detect the transport mode:
+- **ChatGPT (HTTP)**: Domain field included for sandbox isolation
+- **Claude Desktop (STDIO)**: Domain field omitted (local connectors don't support it)
+
+This conditional approach allows the same app to work on both platforms without code changes.
 
 ### Requirements for ChatGPT Submission
 
@@ -520,6 +524,30 @@ ChatGPT will show warnings if these are not configured:
 - A unique string identifier (NOT a real DNS domain you need to own)
 - Used by ChatGPT to create sandboxed subdomain: `{domain}.web-sandbox.oaiusercontent.com`
 - Must be unique across all your apps
+- **Only supported by remote connectors (ChatGPT)** - not used by local connectors (Claude Desktop)
+
+**Conditional Implementation (for dual-platform support):**
+```typescript
+// Detect transport mode at server startup
+const isStdio = process.argv.includes("--stdio");
+
+// In resource metadata:
+_meta: {
+  ui: {
+    // Only include domain for ChatGPT (HTTP mode)
+    ...(isStdio ? {} : { domain: "my-app" }),
+    csp: {
+      connectDomains: [],
+      resourceDomains: [],
+    },
+  },
+}
+```
+
+**Why this pattern?**
+- ChatGPT (HTTP): Requires domain for sandbox isolation
+- Claude Desktop (STDIO): Errors if domain is present (local connectors don't support it)
+- Conditional approach allows same code to work on both platforms
 
 **Naming convention:**
 - Format: `{app-id}-app` or `{app-id}-mcp-app`
