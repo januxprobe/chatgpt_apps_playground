@@ -1,0 +1,322 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>PDF Generator</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      min-height: 100vh;
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .container {
+      max-width: 1000px;
+      width: 100%;
+      margin: 0 auto;
+      background: white;
+      border-radius: 12px;
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+      overflow: auto;
+      display: flex;
+      flex-direction: column;
+      min-height: calc(100vh - 40px);
+      max-height: calc(100vh - 40px);
+    }
+
+    .header {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      padding: 20px;
+      text-align: center;
+    }
+
+    .header h1 {
+      font-size: 24px;
+      font-weight: 600;
+      margin-bottom: 5px;
+    }
+
+    .header p {
+      font-size: 14px;
+      opacity: 0.9;
+    }
+
+    .info-bar {
+      background: #f7fafc;
+      padding: 15px 20px;
+      border-bottom: 1px solid #e2e8f0;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+
+    .info-item {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .info-label {
+      font-size: 12px;
+      color: #718096;
+      font-weight: 500;
+    }
+
+    .info-value {
+      font-size: 14px;
+      color: #2d3748;
+      font-weight: 600;
+    }
+
+    .pdf-viewer {
+      flex: 1;
+      display: flex;
+      align-items: flex-start;
+      justify-content: center;
+      padding: 20px;
+      background: #f7fafc;
+      min-height: 400px;
+      overflow: auto;
+      position: relative;
+      z-index: 1;
+    }
+
+    .canvas-container {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 15px;
+      width: 100%;
+    }
+
+    #pdf-canvas {
+      max-width: 100%;
+      height: auto;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      border-radius: 8px;
+      background: white;
+    }
+
+    .page-controls {
+      display: flex;
+      align-items: center;
+      gap: 15px;
+      padding: 10px;
+      background: white;
+      border-radius: 6px;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+
+    .btn-small {
+      padding: 8px 16px;
+      border: none;
+      border-radius: 4px;
+      background: #667eea;
+      color: white;
+      font-size: 13px;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .btn-small:hover:not(:disabled) {
+      background: #5568d3;
+      transform: translateY(-1px);
+    }
+
+    .btn-small:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+
+    #page-info {
+      font-size: 14px;
+      color: #2d3748;
+      font-weight: 500;
+      min-width: 100px;
+      text-align: center;
+    }
+
+    .loading {
+      text-align: center;
+      color: #718096;
+    }
+
+    .loading-spinner {
+      width: 40px;
+      height: 40px;
+      border: 4px solid #e2e8f0;
+      border-top: 4px solid #667eea;
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+      margin: 0 auto 15px;
+    }
+
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+
+    .actions {
+      padding: 20px;
+      background: white;
+      border-top: 1px solid #e2e8f0;
+      display: flex;
+      gap: 10px;
+      justify-content: center;
+      flex-shrink: 0;
+      min-height: 80px;
+    }
+
+    .btn {
+      padding: 12px 24px;
+      border: none;
+      border-radius: 6px;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .btn-primary {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+    }
+
+    .btn-primary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+    }
+
+    .btn-secondary {
+      background: #e2e8f0;
+      color: #2d3748;
+    }
+
+    .btn-secondary:hover {
+      background: #cbd5e0;
+    }
+
+    .btn:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+
+    .hidden {
+      display: none;
+    }
+
+    .link-container {
+      margin-top: 15px;
+      padding: 20px;
+      background: #f7fafc;
+      border-radius: 8px;
+      border: 1px solid #e2e8f0;
+    }
+
+    .link-title {
+      font-size: 16px;
+      font-weight: 600;
+      color: #2d3748;
+      margin-bottom: 10px;
+      text-align: center;
+    }
+
+    .helper-text {
+      font-size: 13px;
+      color: #4a5568;
+      margin-bottom: 10px;
+      text-align: center;
+    }
+
+    .link-input {
+      width: 100%;
+      padding: 12px;
+      font-family: 'Courier New', monospace;
+      font-size: 12px;
+      border: 2px solid #667eea;
+      border-radius: 6px;
+      background: white;
+      color: #2d3748;
+      text-align: center;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .link-input:focus {
+      outline: none;
+      border-color: #764ba2;
+      box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+    }
+
+    .link-input:hover {
+      background: #fafafa;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      <h1>📄 PDF Generator</h1>
+      <p>Your PDF is ready to view and download</p>
+    </div>
+
+    <div class="info-bar hidden" id="info-bar">
+      <div class="info-item">
+        <span class="info-label">Filename:</span>
+        <span class="info-value" id="filename-display">-</span>
+      </div>
+      <div class="info-item">
+        <span class="info-label">Size:</span>
+        <span class="info-value" id="size-display">-</span>
+      </div>
+      <div class="info-item">
+        <span class="info-label">Template:</span>
+        <span class="info-value" id="template-display">-</span>
+      </div>
+    </div>
+
+    <div class="pdf-viewer">
+      <div class="loading" id="loading">
+        <div class="loading-spinner"></div>
+        <p>Waiting for PDF...</p>
+      </div>
+      <div class="canvas-container hidden" id="canvas-container">
+        <canvas id="pdf-canvas"></canvas>
+        <div class="page-controls">
+          <button class="btn-small" id="prev-page" disabled>← Previous</button>
+          <span id="page-info">Page 1 of 1</span>
+          <button class="btn-small" id="next-page" disabled>Next →</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="actions">
+      <div class="link-container hidden" id="link-container">
+        <h3 class="link-title">📥 Download PDF</h3>
+        <p class="helper-text">
+          Copy this link and paste it in your browser's address bar to view/download the PDF:
+        </p>
+        <input type="text" class="link-input" id="link-input" readonly onclick="this.select()">
+      </div>
+    </div>
+  </div>
+
+  <script type="module" src="./pdf-generator-widget.ts"></script>
+</body>
+</html>

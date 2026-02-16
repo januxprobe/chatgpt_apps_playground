@@ -114,12 +114,8 @@ export function createServer(): McpServer {
       const htmlPath = path.join(DIST_DIR, "widget", "apps", "pdf-generator", "widget", "pdf-generator-widget.html");
       console.error(`Serving UI resource from: ${htmlPath}`);
 
-      // For now, return a placeholder (we'll create the actual widget later)
-      const html = `<!DOCTYPE html>
-<html>
-<head><title>PDF Generator</title></head>
-<body><h1>PDF Generator Widget</h1><p>Widget coming soon...</p></body>
-</html>`;
+      // Read the built widget HTML
+      const html = await fs.readFile(htmlPath, "utf-8");
 
       return {
         contents: [
@@ -132,7 +128,7 @@ export function createServer(): McpServer {
                 ...(isStdio ? {} : { domain: "pdf-generator" }),
                 csp: {
                   connectDomains: [],
-                  resourceDomains: [],
+                  resourceDomains: ["https://cdn.jsdelivr.net"], // PDF.js worker
                 },
               },
             },

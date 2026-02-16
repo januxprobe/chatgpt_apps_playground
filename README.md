@@ -10,6 +10,7 @@ This is a learning playground that demonstrates the MCP (Model Context Protocol)
 - 🔊 **Echo App** - Text echo with character/word counts (purple gradient UI)
 - 🧮 **Calculator App** - Arithmetic operations: add, subtract, multiply, divide (blue/green gradient UI)
 - 🏥 **Hospi-Copilot** - Production-ready multilingual (EN/NL/FR) hospitalization journey with dropdowns, date picker, insurance data, validation (healthcare UI)
+- 📄 **PDF Generator** - Server-side PDF generation with multiple templates, canvas rendering, and downloadable output (purple gradient UI)
 - 📦 **App Template** - Scaffolding for creating new apps in ~5 minutes
 - 🌐 **Dual-Platform** - Same apps work on ChatGPT and Claude Desktop
 - ✅ **ChatGPT Ready** - All apps include CSP and domain configuration for app submission
@@ -276,6 +277,38 @@ Production-ready hospitalization journey assistant for insurance declarations wi
 
 ---
 
+### 📄 PDF Generator
+
+Generate professional PDF documents from templates with server-side rendering and interactive preview.
+
+**Tools:**
+- `generate_pdf` - Creates PDF from template and data
+
+**Features:**
+- **Server-side PDF generation** using pdfkit
+- **Multiple templates** - Simple document and invoice layouts
+- **PDF.js canvas rendering** - View PDFs with page navigation
+- **Multi-page support** - Previous/Next navigation buttons
+- **Download workflow** - Copy blob URL to browser to view/download
+- **File metadata display** - Filename, size, template info
+- **Base64 data transmission** - Secure PDF delivery to widget
+- **CSP-compliant** - PDF.js worker loaded from CDN
+
+**Templates:**
+- **Simple** - Basic document with title, content, and footer
+- **Invoice** - Line items with amounts and total calculation
+
+**Start:** `./scripts/start-app.sh pdf-generator`
+
+**Example prompts:**
+- "Generate a simple PDF titled 'Meeting Notes' with content 'Discussed Q4 objectives'"
+- "Create an invoice PDF for Project XYZ with 3 items"
+- "Generate a PDF document called 'Report' with some example text"
+
+**Note:** Currently works in ChatGPT. Claude Desktop support under investigation (see `apps/pdf-generator/KNOWN_ISSUES.md`).
+
+---
+
 ## 🛠️ Creating Your Own App
 
 ### Quick Method (5 minutes)
@@ -324,6 +357,13 @@ mcp-apps-playground/
 │   │   └── widget/
 │   │       ├── hospi-copilot-widget.html
 │   │       └── hospi-copilot-widget.ts
+│   ├── pdf-generator/
+│   │   ├── server.ts              # PDF generation MCP server
+│   │   ├── standalone.ts
+│   │   ├── KNOWN_ISSUES.md        # Claude Desktop compatibility notes
+│   │   └── widget/
+│   │       ├── pdf-generator-widget.html
+│   │       └── pdf-generator-widget.ts
 │   └── _template/                 # Template for new apps
 │       ├── README.md
 │       ├── server.ts.template
@@ -343,7 +383,8 @@ mcp-apps-playground/
 │   ├── infrastructure/
 │   ├── echo/
 │   ├── calculator/
-│   └── hospi-copilot/
+│   ├── hospi-copilot/
+│   └── pdf-generator/
 ├── vite.app.config.ts            # Widget build config
 ├── tsconfig.json                 # Base TypeScript config
 ├── tsconfig.app.json             # App compilation
@@ -360,6 +401,7 @@ npm run build                    # Build all apps + infrastructure
 npm run build:echo               # Build echo app only
 npm run build:calculator         # Build calculator app only
 npm run build:hospi-copilot      # Build hospi-copilot app only
+npm run build:pdf-generator      # Build pdf-generator app only
 npm run build:infrastructure     # Build infrastructure only
 ```
 
@@ -369,6 +411,7 @@ npm run build:infrastructure     # Build infrastructure only
 npm run start:echo               # Echo app dev mode
 npm run start:calculator         # Calculator app dev mode
 npm run start:hospi-copilot      # Hospi-copilot app dev mode
+npm run start:pdf-generator      # PDF generator app dev mode
 ```
 
 ### Testing with MCP Inspector
@@ -377,6 +420,7 @@ npm run start:hospi-copilot      # Hospi-copilot app dev mode
 npm run inspector:echo           # Test echo with MCP Inspector
 npm run inspector:calculator     # Test calculator with MCP Inspector
 npm run inspector:hospi-copilot  # Test hospi-copilot with MCP Inspector
+npm run inspector:pdf-generator  # Test pdf-generator with MCP Inspector
 ```
 
 ⚠️ **Note:** MCP Inspector has limited support for MCP Apps with UI components. For full testing, use ChatGPT via ngrok.
@@ -468,6 +512,7 @@ _meta: {
 - ✅ **echo** - Domain: `echo-mcp-app`, Self-contained CSP
 - ✅ **calculator** - Domain: `calculator-mcp-app`, Self-contained CSP
 - ✅ **hospi-copilot** - Domain: `hospi-copilot`, Self-contained CSP
+- ✅ **pdf-generator** - Domain: `pdf-generator`, CDN CSP for PDF.js worker
 - ✅ **Tested & Verified** - No CSP warnings in ChatGPT
 
 All apps use self-contained CSP (empty arrays) because assets are bundled by Vite. See `CLAUDE.md` for detailed CSP documentation.

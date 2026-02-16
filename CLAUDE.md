@@ -7,6 +7,7 @@ This is a multi-app learning playground demonstrating the MCP Apps architecture.
 - 🔊 **Echo App** - Text echo with character/word counts
 - 🧮 **Calculator App** - Arithmetic operations (add, subtract, multiply, divide)
 - 🏥 **Hospi-Copilot** - Production-ready multilingual (EN/NL/FR) hospitalization journey with dropdowns, date picker, insurance data, validation
+- 📄 **PDF Generator** - Server-side PDF generation with pdfkit, PDF.js canvas rendering, multi-page navigation, downloadable output
 - 📦 **App Template** - Scaffolding for creating new apps in ~5 minutes
 
 ## Multi-App Architecture
@@ -20,12 +21,15 @@ mcp-apps-playground/
 │   ├── echo/               # Echo app
 │   ├── calculator/         # Calculator app
 │   ├── hospi-copilot/      # Hospitalization journey app
+│   ├── pdf-generator/      # PDF generation app
 │   └── _template/          # Template for new apps
 ├── infrastructure/         # Shared, reusable code
 │   └── server/
 │       ├── main.ts        # Generic HTTP/STDIO transport
 │       ├── types.ts       # TypeScript interfaces
-│       └── i18n.ts        # Internationalization utilities
+│       ├── i18n.ts        # Internationalization utilities
+│       └── utils/
+│           └── pdf-utils.ts  # PDF generation utilities
 ├── scripts/               # Automation
 │   ├── start-app.sh      # Start single app
 │   ├── new-app.sh        # Create new app
@@ -34,6 +38,7 @@ mcp-apps-playground/
     ├── echo/
     ├── calculator/
     ├── hospi-copilot/
+    ├── pdf-generator/
     └── infrastructure/
 ```
 
@@ -296,6 +301,7 @@ npm run build                    # Build all apps + infrastructure
 npm run build:echo               # Build echo app only
 npm run build:calculator         # Build calculator app only
 npm run build:hospi-copilot      # Build hospi-copilot app only
+npm run build:pdf-generator      # Build pdf-generator app only
 npm run build:infrastructure     # Build infrastructure only
 ```
 
@@ -306,6 +312,7 @@ npm run build:infrastructure     # Build infrastructure only
 ./scripts/start-app.sh echo          # Start echo app
 ./scripts/start-app.sh calculator    # Start calculator app
 ./scripts/start-app.sh hospi-copilot # Start hospi-copilot app
+./scripts/start-app.sh pdf-generator # Start pdf-generator app
 ```
 This script automatically:
 - Builds the app
@@ -318,6 +325,7 @@ This script automatically:
 npm run start:echo               # Echo app dev mode
 npm run start:calculator         # Calculator app dev mode
 npm run start:hospi-copilot      # Hospi-copilot app dev mode
+npm run start:pdf-generator      # PDF generator app dev mode
 ```
 
 **Test with MCP Inspector:**
@@ -325,6 +333,7 @@ npm run start:hospi-copilot      # Hospi-copilot app dev mode
 npm run inspector:echo           # Test echo with Inspector
 npm run inspector:calculator     # Test calculator with Inspector
 npm run inspector:hospi-copilot  # Test hospi-copilot with Inspector
+npm run inspector:pdf-generator  # Test pdf-generator with Inspector
 ```
 
 **Multi-app server (WIP):**
@@ -618,6 +627,20 @@ _meta: {
 
 **External assets (CDN, fonts, images):**
 ```typescript
+// Example: PDF Generator app uses PDF.js worker from CDN
+_meta: {
+  ui: {
+    domain: "pdf-generator",
+    csp: {
+      connectDomains: [],
+      resourceDomains: [
+        "https://cdn.jsdelivr.net"  // PDF.js worker
+      ],
+    }
+  }
+}
+
+// Other examples:
 _meta: {
   ui: {
     domain: "my-app",
@@ -757,6 +780,7 @@ _meta: metadata
 | echo | `echo-mcp-app` | Self-contained | ✅ Verified |
 | calculator | `calculator-mcp-app` | Self-contained | ✅ Verified |
 | hospi-copilot | `hospi-copilot` | Self-contained | ✅ Verified |
+| pdf-generator | `pdf-generator` | CDN (PDF.js worker) | ✅ Verified |
 
 All apps tested in ChatGPT with no CSP/domain warnings.
 
@@ -807,6 +831,23 @@ All apps tested in ChatGPT with no CSP/domain warnings.
 - **Back navigation** with state preservation
 - Demo declaration ID generation (HSP-XXXXXX)
 - Auto-fill patient name from conversational context
+
+### PDF Generator (Advanced Server-Side Rendering)
+**Purpose:** Demonstrates server-side PDF generation with client-side rendering
+**Tools:** `generate_pdf` - Creates PDF from template and data
+**UI:** Purple gradient with PDF canvas rendering and download link
+**Pattern:** Server-side generation (pdfkit), PDF.js canvas rendering, Base64 data transmission
+**Templates:** Simple (basic document), Invoice (line items with totals)
+**Features:**
+- **Server-side PDF generation** using pdfkit library
+- **PDF.js canvas rendering** for in-widget preview
+- **Multi-page navigation** with Previous/Next buttons
+- **Download workflow** - Copy blob URL to browser address bar
+- **File metadata display** - Shows filename, size, template type
+- **Base64 data transmission** - Secure PDF delivery via structuredContent
+- **CSP configuration** - Uses CDN for PDF.js worker (https://cdn.jsdelivr.net)
+- **Test-Driven Development** - Built using TDD approach with comprehensive test suite
+**Known Issues:** Currently works perfectly in ChatGPT. Claude Desktop support under investigation (see `apps/pdf-generator/KNOWN_ISSUES.md`)
 
 ### Template (Scaffolding Base)
 **Purpose:** Starting point for new apps
