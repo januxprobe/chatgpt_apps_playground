@@ -17,11 +17,18 @@ This is a multi-app learning playground demonstrating the MCP Apps architecture.
 
 ```
 mcp-apps-playground/
+├── docs/                    # General documentation
+│   └── CLAUDE_DESKTOP_COMPATIBILITY.md
 ├── apps/                    # Self-contained MCP apps
 │   ├── echo/               # Echo app
+│   │   └── docs/          # Echo-specific docs
 │   ├── calculator/         # Calculator app
+│   │   └── docs/          # Calculator-specific docs
 │   ├── hospi-copilot/      # Hospitalization journey app
+│   │   └── docs/          # Hospi-specific docs
 │   ├── pdf-generator/      # PDF generation app
+│   │   └── docs/          # PDF generator-specific docs
+│   │       └── KNOWN_ISSUES.md
 │   └── _template/          # Template for new apps
 ├── infrastructure/         # Shared, reusable code
 │   └── server/
@@ -847,7 +854,7 @@ All apps tested in ChatGPT with no CSP/domain warnings.
 - **Base64 data transmission** - Secure PDF delivery via structuredContent
 - **CSP configuration** - Uses CDN for PDF.js worker (https://cdn.jsdelivr.net)
 - **Test-Driven Development** - Built using TDD approach with comprehensive test suite
-**Known Issues:** Currently works perfectly in ChatGPT. Claude Desktop support under investigation (see `apps/pdf-generator/KNOWN_ISSUES.md`)
+**Known Issues:** Currently works perfectly in ChatGPT. Claude Desktop support under investigation (see `apps/pdf-generator/docs/KNOWN_ISSUES.md`)
 
 ### Template (Scaffolding Base)
 **Purpose:** Starting point for new apps

@@ -305,7 +305,7 @@ Generate professional PDF documents from templates with server-side rendering an
 - "Create an invoice PDF for Project XYZ with 3 items"
 - "Generate a PDF document called 'Report' with some example text"
 
-**Note:** Currently works in ChatGPT. Claude Desktop support under investigation (see `apps/pdf-generator/KNOWN_ISSUES.md`).
+**Note:** Currently works in ChatGPT. Claude Desktop support under investigation (see `apps/pdf-generator/docs/KNOWN_ISSUES.md`).
 
 ---
 
@@ -338,29 +338,35 @@ See the template documentation: `apps/_template/README.md`
 
 ```
 mcp-apps-playground/
-├── apps/                           # All applications
+├── docs/                          # General documentation
+│   └── CLAUDE_DESKTOP_COMPATIBILITY.md
+├── apps/                          # All applications
 │   ├── echo/
 │   │   ├── server.ts              # Echo MCP server
 │   │   ├── standalone.ts          # Entry point
+│   │   ├── docs/                  # Echo-specific docs
 │   │   └── widget/
 │   │       ├── echo-widget.html
 │   │       └── echo-widget.ts
 │   ├── calculator/
 │   │   ├── server.ts              # Calculator MCP server
 │   │   ├── standalone.ts
+│   │   ├── docs/                  # Calculator-specific docs
 │   │   └── widget/
 │   │       ├── calculator-widget.html
 │   │       └── calculator-widget.ts
 │   ├── hospi-copilot/
 │   │   ├── server.ts              # Hospitalization journey MCP server
 │   │   ├── standalone.ts
+│   │   ├── docs/                  # Hospi-specific docs
 │   │   └── widget/
 │   │       ├── hospi-copilot-widget.html
 │   │       └── hospi-copilot-widget.ts
 │   ├── pdf-generator/
 │   │   ├── server.ts              # PDF generation MCP server
 │   │   ├── standalone.ts
-│   │   ├── KNOWN_ISSUES.md        # Claude Desktop compatibility notes
+│   │   ├── docs/                  # PDF generator-specific docs
+│   │   │   └── KNOWN_ISSUES.md    # Claude Desktop compatibility notes
 │   │   └── widget/
 │   │       ├── pdf-generator-widget.html
 │   │       └── pdf-generator-widget.ts
@@ -371,25 +377,25 @@ mcp-apps-playground/
 │       └── widget/
 ├── infrastructure/                # Shared infrastructure
 │   └── server/
-│       ├── main.ts               # Generic HTTP/STDIO server
-│       ├── types.ts              # TypeScript interfaces
-│       └── i18n.ts               # Internationalization utilities
+│       ├── main.ts                # Generic HTTP/STDIO server
+│       ├── types.ts               # TypeScript interfaces
+│       └── i18n.ts                # Internationalization utilities
 ├── scripts/
-│   ├── start-app.sh              # Start any app
-│   ├── new-app.sh                # Create new app
-│   ├── build-app.sh              # Build specific app
-│   └── stop.sh                   # Stop all services
-├── dist/                         # Build output
+│   ├── start-app.sh               # Start any app
+│   ├── new-app.sh                 # Create new app
+│   ├── build-app.sh               # Build specific app
+│   └── stop.sh                    # Stop all services
+├── dist/                          # Build output
 │   ├── infrastructure/
 │   ├── echo/
 │   ├── calculator/
 │   ├── hospi-copilot/
 │   └── pdf-generator/
-├── vite.app.config.ts            # Widget build config
-├── tsconfig.json                 # Base TypeScript config
-├── tsconfig.app.json             # App compilation
-├── tsconfig.infrastructure.json  # Infrastructure compilation
-└── package.json                  # Dependencies and scripts
+├── vite.app.config.ts             # Widget build config
+├── tsconfig.json                  # Base TypeScript config
+├── tsconfig.app.json              # App compilation
+├── tsconfig.infrastructure.json   # Infrastructure compilation
+└── package.json                   # Dependencies and scripts
 ```
 
 ## 🛠️ Development
