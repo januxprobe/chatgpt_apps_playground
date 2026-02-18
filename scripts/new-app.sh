@@ -50,10 +50,10 @@ find apps/$APP_ID -type f -exec sed -i '' "s/{{TOOL_NAME}}/$TOOL_NAME/g" {} \;
 find apps/$APP_ID -type f -exec sed -i '' "s/{{TOOL_TITLE}}/$TOOL_TITLE/g" {} \;
 find apps/$APP_ID -type f -exec sed -i '' "s/{{TOOL_DESCRIPTION}}/$TOOL_DESCRIPTION/g" {} \;
 
-# Add build script to package.json
-npm pkg set scripts.build:$APP_ID="npm run build:app -- --app=$APP_ID"
-npm pkg set scripts.start:$APP_ID="npm run dev:app -- --app=$APP_ID"
-npm pkg set scripts.inspector:$APP_ID="npx @modelcontextprotocol/inspector tsx apps/$APP_ID/standalone.ts -- --stdio"
+# Add scripts to package.json
+npm pkg set "scripts.build:$APP_ID"="tsc -p tsconfig.app.json && cross-env APP=$APP_ID vite build --config vite.app.config.ts"
+npm pkg set "scripts.start:$APP_ID"="concurrently 'cross-env APP=$APP_ID NODE_ENV=development vite build --watch --config vite.app.config.ts' 'tsx watch apps/$APP_ID/standalone.ts'"
+npm pkg set "scripts.inspector:$APP_ID"="npx @modelcontextprotocol/inspector tsx apps/$APP_ID/standalone.ts -- --stdio"
 
 echo ""
 echo "✅ App created at apps/$APP_ID"

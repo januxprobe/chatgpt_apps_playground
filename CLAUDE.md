@@ -192,10 +192,10 @@ This pattern is already implemented in all apps - no changes needed!
 
 **ChatGPT Development:**
 ```bash
-# Hot reload during development
+# Dev mode (local development only - produces unminified build, NOT for ChatGPT testing)
 npm run start:echo
 
-# Full startup with ngrok
+# Full startup with ngrok (use this for ChatGPT testing)
 ./scripts/start-app.sh echo
 
 # Test with MCP Inspector
@@ -296,7 +296,7 @@ echo '{"jsonrpc":"2.0","id":1,"method":"initialize","params":{...}}' | \
 ### Common Issues by Platform
 
 **ChatGPT Issues:**
-- Port 3001 in use → `./scripts/stop.sh`
+- Port 3001 in use → `./scripts/stop-app.sh`
 - ngrok tunnel expired → Restart script
 - CORS errors → Check Express middleware
 - Widget not updating → Rebuild + refresh connector
@@ -310,7 +310,7 @@ echo '{"jsonrpc":"2.0","id":1,"method":"initialize","params":{...}}' | \
 **Resolution:**
 ```bash
 # ChatGPT: Restart services
-./scripts/stop.sh && ./scripts/start-app.sh echo
+./scripts/stop-app.sh && ./scripts/start-app.sh echo
 
 # Claude Desktop: Rebuild and verify
 npm run build:echo && ./scripts/verify-claude-desktop.sh
@@ -350,11 +350,14 @@ This script automatically:
 - Displays ChatGPT configuration URL
 
 **Development mode (with hot reload):**
+
+> **Note:** `npm run start:*` is for local development only. It produces an unminified build and does NOT set up an ngrok tunnel. Use `./scripts/start-app.sh {app}` for ChatGPT testing.
+
 ```bash
-npm run start:echo               # Echo app dev mode
-npm run start:calculator         # Calculator app dev mode
-npm run start:hospi-copilot      # Hospi-copilot app dev mode
-npm run start:pdf-generator      # PDF generator app dev mode
+npm run start:echo               # Echo app dev mode (local only)
+npm run start:calculator         # Calculator app dev mode (local only)
+npm run start:hospi-copilot      # Hospi-copilot app dev mode (local only)
+npm run start:pdf-generator      # PDF generator app dev mode (local only)
 ```
 
 **Test with MCP Inspector:**
@@ -419,7 +422,7 @@ See template documentation: `apps/_template/README.md`
 - `scripts/start-app.sh` - One-command app startup with ngrok
 - `scripts/new-app.sh` - App scaffolding automation
 - `scripts/build-app.sh` - Build specific app
-- `scripts/stop.sh` - Stop all services
+- `scripts/stop-app.sh` - Stop all services
 
 ## MCP Apps Patterns
 
@@ -924,7 +927,7 @@ All apps tested in ChatGPT with no CSP/domain warnings.
 - **Missing dist files**: Run full `npm run build` before testing
 
 ### Runtime Issues
-- **Port 3001 in use**: Run `./scripts/stop.sh` or `lsof -ti:3001 | xargs kill -9`
+- **Port 3001 in use**: Run `./scripts/stop-app.sh` or `lsof -ti:3001 | xargs kill -9`
 - **CORS errors**: Ensure `app.use(cors())` in main.ts
 - **Widget blank**: Verify MIME type is `text/html;profile=mcp-app`
 - **Tool not called**: Improve tool description/title for model understanding
@@ -944,9 +947,9 @@ All apps tested in ChatGPT with no CSP/domain warnings.
 ```bash
 npm run build                       # Build all
 npm run build:{app}                 # Build specific app
-npm run start:{app}                 # Dev mode with watch
+npm run start:{app}                 # Dev mode with watch (local development only, not for ChatGPT)
 ./scripts/start-app.sh {app}        # Full startup with ngrok
-./scripts/stop.sh                   # Stop all services
+./scripts/stop-app.sh                   # Stop all services
 ```
 
 ### Testing

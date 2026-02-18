@@ -66,9 +66,9 @@ echo "🔨 Building $APP_NAME..."
 npm run build:$APP_NAME
 echo ""
 
-# Start the server in background
+# Start the server in background (production mode - no vite watch)
 echo "🌐 Starting MCP server for $APP_NAME on port 3001..."
-npm run start:$APP_NAME > server.log 2>&1 &
+npx tsx apps/$APP_NAME/standalone.ts > server.log 2>&1 &
 SERVER_PID=$!
 sleep 5
 
@@ -141,7 +141,7 @@ echo ""
 cleanup() {
     echo ""
     echo "🛑 Stopping services..."
-    ./scripts/stop.sh
+    ./scripts/stop-app.sh
     exit 0
 }
 

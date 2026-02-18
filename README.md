@@ -94,7 +94,7 @@ Then:
 3. Enter the details shown in the script output
 4. Start chatting and try the app's tools!
 
-**To stop:** Press `Ctrl+C` or run `./scripts/stop.sh`
+**To stop:** Press `Ctrl+C` or run `./scripts/stop-app.sh`
 
 ---
 
@@ -131,7 +131,6 @@ Run apps via ngrok tunnel for ChatGPT access:
 
 This provides:
 - Remote access via ngrok public URL
-- Hot reload for development
 - Server logs for debugging
 
 **Setup:**
@@ -440,7 +439,7 @@ mcp-apps-playground/
 │   ├── start-app.sh               # Start any app
 │   ├── new-app.sh                 # Create new app
 │   ├── build-app.sh               # Build specific app
-│   └── stop.sh                    # Stop all services
+│   └── stop-app.sh                # Stop all services
 ├── dist/                          # Build output
 │   ├── infrastructure/
 │   ├── echo/
@@ -468,14 +467,16 @@ npm run build:file-processor     # Build file-processor app only
 npm run build:infrastructure     # Build infrastructure only
 ```
 
-### Development Mode (with hot reload)
+### Development Mode (local dev only — not for ChatGPT)
+
+> ⚠️ These commands run vite in watch mode which produces large unminified builds (2MB+). Use `./scripts/start-app.sh` for ChatGPT testing.
 
 ```bash
-npm run start:echo               # Echo app dev mode
-npm run start:calculator         # Calculator app dev mode
-npm run start:hospi-copilot      # Hospi-copilot app dev mode
-npm run start:pdf-generator      # PDF generator app dev mode
-npm run start:file-processor     # File processor app dev mode
+npm run start:echo               # Echo app dev mode (hot reload)
+npm run start:calculator         # Calculator app dev mode (hot reload)
+npm run start:hospi-copilot      # Hospi-copilot app dev mode (hot reload)
+npm run start:pdf-generator      # PDF generator app dev mode (hot reload)
+npm run start:file-processor     # File processor app dev mode (hot reload)
 ```
 
 ### Testing with MCP Inspector
@@ -496,7 +497,7 @@ npm run inspector:file-processor # Test file-processor with MCP Inspector
 ./scripts/start-app.sh <app>    # Start app with ngrok
 ./scripts/build-app.sh <app>    # Build specific app
 ./scripts/new-app.sh <app-id>   # Create new app from template
-./scripts/stop.sh               # Stop all services
+./scripts/stop-app.sh            # Stop all services
 ```
 
 ## 🔑 Key Concepts
@@ -593,7 +594,7 @@ lsof -ti:3001 | xargs kill -9
 
 Or use the stop script:
 ```bash
-./scripts/stop.sh
+./scripts/stop-app.sh
 ```
 
 ### STDIO Mode Logging
